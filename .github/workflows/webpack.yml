@@ -1,0 +1,37 @@
+name: Push assets to fin-track-cdn repo
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Build assets and push to fin-track-cdn repo
+      run: |
+        npm install --dev
+        npm run build
+        git clone https://github.com/assistsu/fin-track-cdn.git
+        cp -r assets/ fin-track-cdn/
+        cd fin-track-cdn
+        git config --local user.email "sangameswaran.a.tech@gmail.com"
+        git config --local user.name "assistsu"
+        git remote set-url origin https://${{ secrets.PUSH_TO_CDN_SECRET }}@github.com/assistsu/fin-track-cdn.git
+        git add .
+        git commit -m "Created assets for commit:\n$(git log -1)"
+        git push

@@ -35,8 +35,7 @@ const commonConfig = {
     },
     resolve: {
         alias: {
-            styles: path.resolve(__dirname, 'assets/styles/'),
-            Config: path.resolve(__dirname, 'src/components/Config/'),
+            styles: path.resolve(__dirname, 'styles/'),
             images: path.resolve(__dirname, 'assets/images/'),
         }
     },
