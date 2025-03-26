@@ -15,7 +15,7 @@ export default class Upload extends React.PureComponent {
     };
 
     handleExtractorChange = (e) => {
-        this.setState({ extractor: e.target.value });
+        this.setState({ extractor: e.target.value, transactions: [], processed_transactions: [], isFileChosen: false });
     };
 
     handleFileUpload = async (e) => {
