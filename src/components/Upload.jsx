@@ -1,47 +1,55 @@
 "use strict";
 
 import React from "react";
-import * as XLSX from "xlsx";
+import { toast } from 'react-toastify';
+import Extractor from "./Extractor";
 
-const TransactionsExtractor = require("./extractor");
-const ColumnNameMapper = require("./extractor/ColumnNameMapper");
+const EXTRACTORS_MAP = {
+    "HDFC_AS_XLS_V1": "HDFC - XLS - V1",
+    "SBI_AS_XLS_V1": "SBI - XLS - V1",
+    "AXIS_AS_PDF_V1": "AXIS - PDF - V1",
+};
+
+const COLUMNS = [
+    "DATE",
+    "DESCRIPTION",
+    "DEBIT",
+    "CREDIT",
+    "BALANCE",
+]
+
+const COLUMN_DEBIT = "DEBIT";
+const COLUMN_CREDIT = "CREDIT";
+const COLUMN_BALANCE = "BALANCE";
 
 export default class Upload extends React.PureComponent {
     state = {
-        extractor: "HDFC_AST_XLS_V1",
+        chosenExtractor: "HDFC_AS_XLS_V1",
         isFileChosen: false,
         transactions: [],
         processed_transactions: [],
     };
 
     handleExtractorChange = (e) => {
-        this.setState({ extractor: e.target.value, transactions: [], processed_transactions: [], isFileChosen: false });
+        this.setState({ chosenExtractor: e.target.value, transactions: [], processed_transactions: [], isFileChosen: false });
     };
 
     handleFileUpload = async (e) => {
         const file = e.target.files[0];
         if (!file) return this.setState({ transactions: [], processed_transactions: [], isFileChosen: false });
-
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const arrayBuffer = e.target.result;
-            const workbook = XLSX.read(arrayBuffer, { type: "array" });
-            const sheetName = workbook.SheetNames[0];
-            const sheet = workbook.Sheets[sheetName];
-            const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1, raw: false });
-            const transactions = TransactionsExtractor.extract(this.state.extractor, jsonData);
-            const processed_transactions = TransactionsExtractor.renameColumns(transactions);
-            this.setState({ transactions, processed_transactions, isFileChosen: true });
-        };
-        reader.readAsArrayBuffer(file);
+        Extractor.getTransactions(this.state.chosenExtractor, file).then(data => {
+            this.setState({ transactions: data.transactions, processed_transactions: data.processed_transactions, isFileChosen: true });
+        }).catch(err => {
+            toast.error(err.message);
+        });
     };
 
     showSummary() {
         const transactions = this.state.processed_transactions;
         if (transactions.length === 0) return;
-        const totalDebits = _.sumBy(transactions, (transaction) => transaction[ColumnNameMapper.GENERIC_COLUMN_NAMES.DEBIT]);
-        const totalCredits = _.sumBy(transactions, (transaction) => transaction[ColumnNameMapper.GENERIC_COLUMN_NAMES.CREDIT]);
-        const closingBalance = transactions[this.state.transactions.length - 1][ColumnNameMapper.GENERIC_COLUMN_NAMES.BALANCE];
+        const totalDebits = _.sumBy(transactions, (transaction) => transaction[COLUMN_DEBIT]);
+        const totalCredits = _.sumBy(transactions, (transaction) => transaction[COLUMN_CREDIT]);
+        const closingBalance = transactions[this.state.transactions.length - 1][COLUMN_BALANCE];
         return (
             <div className="mt-4">
                 <h5>Summary</h5>
@@ -67,7 +75,7 @@ export default class Upload extends React.PureComponent {
 
     getColumns(transaction, tr_i) {
         return (
-            <tr key={tr_i}>{ColumnNameMapper.getGenericColumnNameKeys().map((key, td_i) => <td key={td_i}>{transaction[key]}</td>)}</tr>
+            <tr key={tr_i}>{COLUMNS.map((key, td_i) => <td key={td_i}>{transaction[key]}</td>)}</tr>
         );
     }
 
@@ -85,7 +93,7 @@ export default class Upload extends React.PureComponent {
                 <table className="table table-striped table-hover">
                     <thead className="table-primary">
                         <tr>
-                            {ColumnNameMapper.getGenericColumnNameValues().map((column, index) => <th key={index}>{column}</th>)}
+                            {COLUMNS.map((column, index) => <th key={index}>{column}</th>)}
                         </tr>
                     </thead>
                     <tbody>
@@ -103,9 +111,9 @@ export default class Upload extends React.PureComponent {
                     <h3 className="mb-3">Upload Account/Credit Card Statement</h3>
                     <div className="mb-3">
                         <label className="form-label">Select Extractor</label>
-                        <select className="form-select" value={this.state.extractor} onChange={this.handleExtractorChange}>
-                            {TransactionsExtractor.getExtractorKeys().map((extractor, index) => (
-                                <option key={index} value={extractor}>{TransactionsExtractor.getExtractorName(extractor)}</option>
+                        <select className="form-select" value={this.state.chosenExtractor} onChange={this.handleExtractorChange}>
+                            {Object.keys(EXTRACTORS_MAP).map((extractor, index) => (
+                                <option key={index} value={extractor}>{EXTRACTORS_MAP[extractor]}</option>
                             ))}
                         </select>
                     </div>
