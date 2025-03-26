@@ -33,8 +33,11 @@ function getTransactionsFromXlsV1(jsonData) {
         }
         const transaction = {};
         for (let j = 0; j < columns.length; j++) {
-            transaction[columns[j]] = row[j];
+            transaction[_.trim(columns[j])] = row[j];
         }
+        transaction["Debit"] = _.replace(transaction["Debit"], ",", "");
+        transaction["Credit"] = _.replace(transaction["Credit"], ",", "");
+        transaction["Balance"] = _.replace(transaction["Balance"], ",", "");
         transactions.push(transaction);
     }
 

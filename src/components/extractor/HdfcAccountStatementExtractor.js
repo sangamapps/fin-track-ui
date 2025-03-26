@@ -48,6 +48,7 @@ function getTransactionsFromXlsV1(jsonData) {
         for (let j = 0; j < columns.length; j++) {
             transaction[columns[j]] = row[j];
         }
+        transaction["Date"] = moment(transaction["Date"], "DD-MM-YYYY");
         transactions.push(transaction);
     }
 

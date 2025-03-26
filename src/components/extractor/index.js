@@ -4,8 +4,8 @@ const HdfcbstExtractor = require("./HdfcAccountStatementExtractor");
 const SbibstExtractor = require("./SbiAccountStatementExtractor");
 
 const EXTRACTORS_NAME_MAP = {
-    "HDFC_AST_XLS_V1": "HDFC ACCOUNT STATEMENT EXTRACTOR - XLS V1",
-    "SBI_AST_XLS_V1": "SBI ACCOUNT STATEMENT EXTRACTOR - XLS V1"
+    "HDFC_AST_XLS_V1": "HDFC - XLS - V1",
+    "SBI_AST_XLS_V1": "SBI - XLS - V1"
 };
 
 const EXTRACTORS_MAP = {

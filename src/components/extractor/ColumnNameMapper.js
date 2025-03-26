@@ -22,7 +22,7 @@ const COLUMN_NAME_MAP = {
     "Value Date": null,
     "Description": GENERIC_COLUMN_NAMES.DESCRIPTION,
     "Ref No./Cheque No.": null,
-    "        Debit": GENERIC_COLUMN_NAMES.DEBIT,
+    "Debit": GENERIC_COLUMN_NAMES.DEBIT,
     "Credit": GENERIC_COLUMN_NAMES.CREDIT,
     "Balance": GENERIC_COLUMN_NAMES.BALANCE,
 }
