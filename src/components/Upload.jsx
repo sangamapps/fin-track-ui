@@ -100,7 +100,7 @@ export default class Upload extends React.PureComponent {
         return (
             <div className="container mt-4">
                 <div className="card p-4 shadow-lg">
-                    <h3 className="mb-3">Upload Bank Statement</h3>
+                    <h3 className="mb-3">Upload Account/Credit Card Statement</h3>
                     <div className="mb-3">
                         <label className="form-label">Select Extractor</label>
                         <select className="form-select" value={this.state.extractor} onChange={this.handleExtractorChange}>
