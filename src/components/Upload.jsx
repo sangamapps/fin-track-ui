@@ -109,7 +109,7 @@ export default class Upload extends React.PureComponent {
             return;
         }
         return (
-            <div className="mt-4">
+            <div className="mt-4 overflow-auto">
                 <h5>Transactions</h5>
                 <table className="table table-striped table-hover">
                     <thead className="table-primary">
