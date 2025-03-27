@@ -37,6 +37,7 @@ const commonConfig = {
         alias: {
             styles: path.resolve(__dirname, 'styles/'),
             images: path.resolve(__dirname, 'assets/images/'),
+            AppRedux: path.resolve(__dirname, 'src/AppRedux/'),
         }
     },
     plugins: [

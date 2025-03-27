@@ -20,7 +20,7 @@ const initialState = {
 export default (state = initialState, action) => {
     switch (action.type) {
         case constants.SET_USER_DETAILS:
-            newState = Object.assign({}, state, {
+            const newState = Object.assign({}, state, {
                 userInfo: action.userInfo,
             });
             return newState;

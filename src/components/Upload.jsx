@@ -22,7 +22,7 @@ const COLUMN_DEBIT = "DEBIT";
 const COLUMN_CREDIT = "CREDIT";
 const COLUMN_BALANCE = "BALANCE";
 
-export default class Upload extends React.PureComponent {
+export default class Upload extends React.Component {
     state = {
         chosenExtractor: "HDFC_AS_XLS_V1",
         chosenFile: null,
@@ -127,8 +127,8 @@ export default class Upload extends React.PureComponent {
 
     render() {
         return (
-            <div className="container mt-4">
-                <div className="card p-4 shadow-lg">
+            <div className="">
+                <div className="card p-3 shadow-lg">
                     <h3 className="mb-3">Upload Account/Credit Card Statement</h3>
                     <div className="mb-3">
                         <label className="form-label">Select Extractor</label>

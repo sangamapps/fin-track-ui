@@ -3,10 +3,22 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import store from './components/redux/store';
-import 'bootstrap/js/dist/modal';
-import 'bootstrap/js/dist/tab';
+import store from './AppRedux/store';
+import { BrowserRouter } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import 'bootstrap/dist/js/bootstrap.min.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import 'styles/common.scss';
 import App from "./App.jsx";
 
-ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById("container"));
+function Container() {
+    return <Provider store={store}>
+        <BrowserRouter basename="/">
+            <ToastContainer />
+            <App />
+        </BrowserRouter>
+    </Provider>
+}
+
+ReactDOM.render(<Container />, document.getElementById("container"));
