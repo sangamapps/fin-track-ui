@@ -25,24 +25,45 @@ const COLUMN_BALANCE = "BALANCE";
 export default class Upload extends React.PureComponent {
     state = {
         chosenExtractor: "HDFC_AS_XLS_V1",
-        isFileChosen: false,
+        chosenFile: null,
         transactions: [],
         processed_transactions: [],
+        extractionStatus: 0,
+        extracted: 0,
     };
 
+    getTransactions = () => {
+        if (!this.state.chosenFile) return toast.warn("Please select a file");
+        this.setState({ extractionStatus: 1, extracted: 0 });
+        Extractor.getTransactions(this.state.chosenExtractor, this.state.chosenFile).then(data => {
+            this.setState({ transactions: data.transactions, processed_transactions: data.processed_transactions, extractionStatus: 0, extracted: 1 });
+        }).catch(err => {
+            this.setState({ transactions: [], processed_transactions: [], extractionStatus: 0, extracted: 0 });
+            toast.error(err.message);
+        });
+    }
+
     handleExtractorChange = (e) => {
-        this.setState({ chosenExtractor: e.target.value, transactions: [], processed_transactions: [], isFileChosen: false });
+        this.setState({ chosenExtractor: e.target.value, transactions: [], processed_transactions: [], extracted: 0 });
     };
 
     handleFileUpload = async (e) => {
         const file = e.target.files[0];
-        if (!file) return this.setState({ transactions: [], processed_transactions: [], isFileChosen: false });
-        Extractor.getTransactions(this.state.chosenExtractor, file).then(data => {
-            this.setState({ transactions: data.transactions, processed_transactions: data.processed_transactions, isFileChosen: true });
-        }).catch(err => {
-            toast.error(err.message);
-        });
+        if (!file) return this.setState({ chosenFile: null, transactions: [], processed_transactions: [], extracted: 0 });
+        this.setState({ chosenFile: file, transactions: [], processed_transactions: [], extracted: 0 });
     };
+
+    showExtractionStatus() {
+        if (this.state.extractionStatus === 0) return;
+        return (
+            <div className="mt-4 d-flex justify-content-center">
+                <div className="spinner-border text-primary text-center" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        );
+
+    }
 
     showSummary() {
         const transactions = this.state.processed_transactions;
@@ -82,7 +103,7 @@ export default class Upload extends React.PureComponent {
     showTransactions() {
         const transactions = this.state.processed_transactions;
         if (transactions.length === 0) {
-            if (this.state.isFileChosen) {
+            if (this.state.chosenFile && this.state.extracted) {
                 return <div className="mt-4 alert alert-danger"> No transactions found</div>;
             }
             return;
@@ -121,7 +142,11 @@ export default class Upload extends React.PureComponent {
                         <label className="form-label">Upload File</label>
                         <input type="file" className="form-control" onChange={this.handleFileUpload} />
                     </div>
+                    <div>
+                        <button className="btn btn-primary" onClick={this.getTransactions}>Extract</button>
+                    </div>
                 </div>
+                {this.showExtractionStatus()}
                 {this.showSummary()}
                 {this.showTransactions()}
             </div>
