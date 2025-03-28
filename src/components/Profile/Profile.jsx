@@ -2,7 +2,7 @@
 
 import React from "react";
 import { connect } from "react-redux";
-import Request from "./Request";
+import Request from "../../Utils/Request";
 import { setUserAction } from 'AppRedux';
 
 class Profile extends React.Component {

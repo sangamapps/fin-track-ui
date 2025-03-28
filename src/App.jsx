@@ -1,22 +1,28 @@
 "use strict";
 
-import React, { lazy } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { Switch, Route, Redirect } from "react-router-dom";
-import Login from "./components/Login.jsx";
-import Layout from "./components/Layout.jsx";
+import LazyLoad from "./Components/LazyLoad/LazyLoad.jsx";
+import Layout from "./Components/Layout/Layout.jsx";
 
-const links = [
-    { path: '/', LayoutBody: lazy(() => import('./components/DashBoard.jsx')) },
-    { path: '/transactions', LayoutBody: lazy(() => import('./components/Transactions.jsx')) },
-    { path: '/accounts', LayoutBody: lazy(() => import('./components/Accounts.jsx')) },
-    { path: '/rules', LayoutBody: lazy(() => import('./components/Rules.jsx')) },
-    { path: '/profile', LayoutBody: lazy(() => import('./components/Profile.jsx')) },
+const routes = [
+    { path: '/', LayoutBody: <LazyLoad component={() => import('./Components/DashBoard/DashBoard.jsx')} /> },
+    { path: '/transactions', LayoutBody: <LazyLoad component={() => import('./Components/Transactions/Transactions.jsx')} /> },
+    { path: '/accounts', LayoutBody: <LazyLoad component={() => import('./Components/Accounts/Accounts.jsx')} /> },
+    { path: '/rules', LayoutBody: <LazyLoad component={() => import('./Components/Rules/Rules.jsx')} /> },
+    { path: '/profile', LayoutBody: <LazyLoad component={() => import('./Components/Profile/Profile.jsx')} /> },
 ];
+
+function getRoute(route, key) {
+    return <Route key={key}
+        path={route.path} exact={true}
+        render={(props) => <Layout {...props} LayoutBody={route.LayoutBody} />} />;
+}
 
 function getRoutes() {
     return <Switch>
-        {links.map((o, i) => <Route exact={true} key={i} path={o.path} render={(props) => <Layout {...props} LayoutBody={o.LayoutBody} />} />)}
+        {routes.map(getRoute)}
         <Redirect to="/" />
     </Switch>;
 }
@@ -24,6 +30,6 @@ function getRoutes() {
 export default function () {
     const { userInfo } = useSelector(state => state);
     return <div className="app-body">
-        {userInfo && userInfo.email ? getRoutes() : <Login />}
+        {userInfo && userInfo.email ? getRoutes() : <LazyLoad component={() => import('./Components/Login/Login.jsx')} />}
     </div>;
 }

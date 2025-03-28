@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { Suspense } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -62,9 +62,7 @@ class Layout extends React.Component {
                 </div>
             </nav>
             <div className="container-fluid mt-3">
-                <Suspense fallback={this.getLoader()}>
-                    <LayoutBody />
-                </Suspense>
+                {LayoutBody}
             </div>
         </div>
     }

@@ -1,7 +1,7 @@
 import React from "react";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import Request from "./Request";
-import { GOOGLE_CLIENT_ID } from "./Config";
+import Request from "../../Utils/Request";
+import { GOOGLE_CLIENT_ID } from "../Config";
 import { setUserAction } from 'AppRedux';
 
 export default class extends React.Component {
