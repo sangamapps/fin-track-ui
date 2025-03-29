@@ -18,5 +18,5 @@ async function request(path, method, data = {}, headers) {
 export default {
     get: (path, params) => request(path, "GET", { params }),
     post: (path, data, headers) => request(path, "POST", { data }, headers),
-    delete: (path) => request(path, "DELETE")
+    delete: (path) => request(path, "DELETE"),
 };

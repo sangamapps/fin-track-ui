@@ -1,24 +1,30 @@
 "use strict";
 
 import React from "react";
-import Modal from "../Modal/Modal.jsx";
+import Modal from "@modal/Modal.jsx";
+import accountService from "@services/accountService";
+import { ACCOUNT_GROUP } from "@config";
 
-const ACCOUNT_GROUP = {
-    bank: "Bank",
-    cash: "Cash",
-    credit_card: "Credit Card",
-};
+function getDerivedStateFromProps(props) {
+    return {
+        accountGroup: props.account?.accountGroup || "",
+        name: props.account?.name || "",
+        amount: props.account?.amount || "",
+        description: props.account?.description || "",
+    };
+}
 
-export default class CrudAccount extends React.Component {
+export default class CrudAccountModal extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            accountGroup: props.account?.accountGroup || "",
-            name: props.account?.name || "",
-            amount: props.account?.amount || "",
-            description: props.account?.description || "",
-        };
+        this.state = getDerivedStateFromProps(props);
         this.formRef = React.createRef();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.account !== this.props.account) {
+            this.setState(getDerivedStateFromProps(this.props));
+        }
     }
 
     handleChange = (e) => {
@@ -26,17 +32,16 @@ export default class CrudAccount extends React.Component {
     };
 
     handleSubmit = (e) => {
-        console.log("handleSubmit called")
         e.preventDefault();
         const { accountGroup, name, amount, description } = this.state;
 
-        this.props.onSave({
-            id: this.props.account?.id || null,
+        accountService.upsert({
+            _id: this.props.account?._id || null,
             accountGroup,
             name,
             amount: parseFloat(amount),
             description,
-        });
+        }).then(data => this.props.onSave(data));
     };
 
     getModalTitle() {
@@ -44,7 +49,6 @@ export default class CrudAccount extends React.Component {
     }
 
     onSubmitClick = () => {
-        console.log("calledc")
         if (this.formRef.current) {
             this.formRef.current.requestSubmit();
         }
@@ -58,8 +62,8 @@ export default class CrudAccount extends React.Component {
                     <label className="form-label">Account Group</label>
                     <select className="form-control" name="accountGroup" value={accountGroup} onChange={this.handleChange} required>
                         <option></option>
-                        {Object.keys(ACCOUNT_GROUP).map((key) => (
-                            <option key={key} value={key}>{ACCOUNT_GROUP[key]}</option>
+                        {Object.keys(ACCOUNT_GROUP).map((key, index) => (
+                            <option key={index} value={key}>{ACCOUNT_GROUP[key]}</option>
                         ))}
                     </select>
                 </div>
@@ -73,8 +77,7 @@ export default class CrudAccount extends React.Component {
                 </div>
                 <div className="mb-2">
                     <label className="form-label">Description</label>
-                    <textarea className="form-control" name="description" value={description} onChange={this.handleChange}
-                    ></textarea>
+                    <textarea className="form-control" name="description" value={description} onChange={this.handleChange} />
                 </div>
             </form>
         );

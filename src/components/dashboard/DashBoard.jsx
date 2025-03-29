@@ -2,7 +2,7 @@
 
 import React from "react";
 
-export default class extends React.Component {
+export default class Dashboard extends React.Component {
 
     render() {
         return <div className="">

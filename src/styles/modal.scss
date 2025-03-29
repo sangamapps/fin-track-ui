@@ -1,0 +1,45 @@
+.modal-container-enter {
+    .modal {
+        animation: modal-show-animation 0.5s;
+    }
+
+    .modal-backdrop {
+        animation: modal-backdrop-show-animation 0.5s;
+    }
+}
+
+.modal-container-exit {
+    .modal {
+        animation: modal-hide-animation 0.5s;
+    }
+
+    .modal-backdrop {
+        animation: modal-backdrop-hide-animation 0.5s;
+    }
+}
+
+@keyframes modal-show-animation {
+    0% {
+        margin-top: 500px;
+        transform: scale(0);
+    }
+}
+
+@keyframes modal-hide-animation {
+    100% {
+        margin-top: 500px;
+        transform: scale(0);
+    }
+}
+
+@keyframes modal-backdrop-show-animation {
+    0% {
+        opacity: 0;
+    }
+}
+
+@keyframes modal-backdrop-hide-animation {
+    100% {
+        opacity: 0;
+    }
+}

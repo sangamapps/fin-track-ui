@@ -2,7 +2,7 @@
 
 import React, { Suspense, lazy } from "react";
 
-export default class extends React.Component {
+export default class LazyLoad extends React.Component {
 
     getSpinner(){
         return <div className="d-flex justify-content-center">

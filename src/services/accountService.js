@@ -2,14 +2,8 @@
 
 import http from "./http";
 
-export default class {
-    static getAll() {
-        return http.get("/api/v1/accounts");
-    }
-    static upsert(account) {
-        return http.post("/api/v1/account", account);
-    }
-    static delete(id) {
-        return http.delete(`/api/v1/account/${id}`);
-    }
+export default {
+    getAll: () => http.get("/api/v1/accounts"),
+    upsert: (account) => http.post("/api/v1/account", account),
+    delete: (_id) => http.delete(`/api/v1/account/${_id}`),
 }

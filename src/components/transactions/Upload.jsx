@@ -2,7 +2,8 @@
 
 import React from "react";
 import { toast } from 'react-toastify';
-import Extractor from "./Extractor";
+import accountService from "@services/accountService";
+import transactionService from "@services/transactionService";
 
 const EXTRACTORS_MAP = {
     "HDFC_AS_XLS_V1": "HDFC - XLS - V1",
@@ -11,20 +12,20 @@ const EXTRACTORS_MAP = {
 };
 
 const COLUMNS = [
-    "DATE",
-    "DESCRIPTION",
-    "DEBIT",
-    "CREDIT",
-    "BALANCE",
+    "date",
+    "description",
+    "debit",
+    "credit",
+    "balance",
 ]
 
-const COLUMN_DEBIT = "DEBIT";
-const COLUMN_CREDIT = "CREDIT";
-const COLUMN_BALANCE = "BALANCE";
+const COLUMN_DEBIT = "debit";
+const COLUMN_CREDIT = "credit";
+const COLUMN_BALANCE = "balance";
 
 export default class Upload extends React.Component {
     state = {
-        chosenExtractor: "HDFC_AS_XLS_V1",
+        chosenExtractor: Object.keys(EXTRACTORS_MAP)[0],
         chosenFile: null,
         transactions: [],
         processed_transactions: [],
@@ -35,7 +36,7 @@ export default class Upload extends React.Component {
     getTransactions = () => {
         if (!this.state.chosenFile) return toast.warn("Please select a file");
         this.setState({ extractionStatus: 1, extracted: 0 });
-        Extractor.getTransactions(this.state.chosenExtractor, this.state.chosenFile).then(data => {
+        transactionService.extract(this.state.chosenExtractor, this.state.chosenFile).then(data => {
             this.setState({ transactions: data.transactions, processed_transactions: data.processed_transactions, extractionStatus: 0, extracted: 1 });
         }).catch(err => {
             this.setState({ transactions: [], processed_transactions: [], extractionStatus: 0, extracted: 0 });
@@ -70,7 +71,7 @@ export default class Upload extends React.Component {
         if (transactions.length === 0) return;
         const totalDebits = _.sumBy(transactions, (transaction) => transaction[COLUMN_DEBIT]);
         const totalCredits = _.sumBy(transactions, (transaction) => transaction[COLUMN_CREDIT]);
-        const closingBalance = transactions[this.state.transactions.length - 1][COLUMN_BALANCE];
+        const closingBalance = transactions[transactions.length - 1][COLUMN_BALANCE];
         return (
             <div className="mt-4">
                 <h5>Summary</h5>
@@ -129,7 +130,7 @@ export default class Upload extends React.Component {
         return (
             <div className="">
                 <div className="card p-3 shadow-lg">
-                    <h3 className="mb-3">Upload Account/Credit Card Statement</h3>
+                    <h3 className="mb-3">Upload Statement</h3>
                     <div className="mb-3">
                         <label className="form-label">Select Extractor</label>
                         <select className="form-select" value={this.state.chosenExtractor} onChange={this.handleExtractorChange}>

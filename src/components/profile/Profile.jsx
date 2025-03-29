@@ -2,12 +2,12 @@
 
 import React from "react";
 import { connect } from "react-redux";
-import Request from "../../Utils/Request";
-import { setUserDetails } from "store";
+import userService from "@services/userService";
+import { setUserDetails } from "@store";
 
 class Profile extends React.Component {
     handleLogout = () => {
-        Request.post("/user/logout").then(data => {
+        userService.logout().then(data => {
             if (data.success) {
                 this.props.dispatch(setUserDetails({}));
             } else {

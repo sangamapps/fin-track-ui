@@ -35,10 +35,14 @@ const commonConfig = {
     },
     resolve: {
         alias: {
-            styles: path.resolve(__dirname, 'styles/'),
-            images: path.resolve(__dirname, 'assets/images/'),
-            store: path.resolve(__dirname, 'src/store/'),
-            config: path.resolve(__dirname, 'src/config/'),
+            "@components": path.resolve(__dirname, "src/components"),
+            "@modal": path.resolve(__dirname, "src/components/modal"),
+            "@services": path.resolve(__dirname, "src/services"),
+            "@store": path.resolve(__dirname, "src/store/"),
+            "@styles": path.resolve(__dirname, "src/styles/"),
+            "@utils": path.resolve(__dirname, "src/utils"),
+            "@config": path.resolve(__dirname, "src/config"),
+
         }
     },
     plugins: [

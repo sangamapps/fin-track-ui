@@ -16,8 +16,12 @@ class Layout extends React.Component {
         return this.props.location.pathname == to ? "active" : "";
     }
 
-    getLink(to, content) {
+    getNavLink(to, content) {
         return <Link to={to} className={"nav-link " + this.getActiveStatus(to)}>{content}</Link>;
+    }
+
+    getDropdownItem(to, content) {
+        return <Link to={to} className={"dropdown-item"}>{content}</Link>;
     }
 
     getLoader(){
@@ -40,16 +44,20 @@ class Layout extends React.Component {
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                             <li className="nav-item">
-                                {this.getLink("/", "Dashboard")}
+                                {this.getNavLink("/", "Dashboard")}
+                            </li>
+                            <li className="nav-item dropdown">
+                                <span className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Transactions</span>
+                                <ul className="dropdown-menu">
+                                    <li>{this.getDropdownItem("/transactions/view", "View")}</li>
+                                    <li>{this.getDropdownItem("/transactions/upload-statement", "Upload Statement")}</li>
+                                </ul>
                             </li>
                             <li className="nav-item">
-                                {this.getLink("/transactions", "Transactions")}
+                                {this.getNavLink("/accounts", "Accounts")}
                             </li>
                             <li className="nav-item">
-                                {this.getLink("/accounts", "Accounts")}
-                            </li>
-                            <li className="nav-item">
-                                {this.getLink("/rules", "Rules")}
+                                {this.getNavLink("/rules", "Rules")}
                             </li>
                             <li className="nav-item d-lg-none">
                                 {this.getProfileLink()}

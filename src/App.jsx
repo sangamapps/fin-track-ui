@@ -3,20 +3,20 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Switch, Route, Redirect } from "react-router-dom";
-import LazyLoad from "./Components/LazyLoad/LazyLoad.jsx";
-import Layout from "./Components/Layout/Layout.jsx";
+import LazyLoad from "./components/lazy-load/LazyLoad.jsx";
+import Layout from "./components/layout/Layout.jsx";
 
 const routes = [
-    { path: '/', LayoutBody: <LazyLoad component={() => import('./Components/DashBoard/DashBoard.jsx')} /> },
-    { path: '/transactions', LayoutBody: <LazyLoad component={() => import('./Components/Transactions/Transactions.jsx')} /> },
-    { path: '/accounts', LayoutBody: <LazyLoad component={() => import('./Components/Accounts/Accounts.jsx')} /> },
-    { path: '/rules', LayoutBody: <LazyLoad component={() => import('./Components/Rules/Rules.jsx')} /> },
-    { path: '/profile', LayoutBody: <LazyLoad component={() => import('./Components/Profile/Profile.jsx')} /> },
+    { path: '/', exact: true, LayoutBody: <LazyLoad component={() => import('./components/dashboard/DashBoard.jsx')} /> },
+    { path: '/transactions', LayoutBody: <LazyLoad component={() => import('./components/transactions/Transactions.jsx')} /> },
+    { path: '/accounts', LayoutBody: <LazyLoad component={() => import('./components/accounts/Accounts.jsx')} /> },
+    { path: '/rules', LayoutBody: <LazyLoad component={() => import('./components/rules/Rules.jsx')} /> },
+    { path: '/profile', LayoutBody: <LazyLoad component={() => import('./components/profile/Profile.jsx')} /> },
 ];
 
 function getRoute(route, key) {
     return <Route key={key}
-        path={route.path} exact={true}
+        path={route.path} exact={route.exact}
         render={(props) => <Layout {...props} LayoutBody={route.LayoutBody} />} />;
 }
 

@@ -1,14 +1,14 @@
 import React from "react";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import Request from "../../Utils/Request";
-import { GOOGLE_CLIENT_ID } from "config";
+import { GOOGLE_CLIENT_ID } from "@config";
+import userService from "@services/userService";
 import { connect } from "react-redux";
-import { setUserDetails } from "store";
+import { setUserDetails } from "@store";
 
 class Login extends React.Component {
 
     onSuccess = (credentialResponse) => {
-        Request.post("/user/login", { token: credentialResponse.credential }).then(data => {
+        userService.login(credentialResponse.credential).then(data => {
             if (data.success) {
                 this.props.dispatch(setUserDetails(data.user));
             } else {

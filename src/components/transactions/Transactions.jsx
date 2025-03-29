@@ -3,7 +3,7 @@
 import React from "react";
 import Upload from "./Upload.jsx";
 
-export default class extends React.Component {
+export default class Transactions extends React.Component {
 
     render() {
         return <div className="">
