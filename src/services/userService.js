@@ -3,6 +3,6 @@
 import http from "./http";
 
 export default {
-    login: (token) => http.post("/user/login", { token }),
-    logout: () => http.post("/user/logout"),
+    login: (token) => http.post("/api/v1/user/login", { token }),
+    logout: () => http.post("/api/v1/user/logout"),
 }
