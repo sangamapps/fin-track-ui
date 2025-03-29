@@ -1,0 +1,11 @@
+.modal-container-enter {
+    .modal {
+        animation: zoom-out 0.5s;
+    }
+}
+
+.modal-container-exit {
+    .modal {
+        animation: zoom-in 0.5s;
+    }
+}

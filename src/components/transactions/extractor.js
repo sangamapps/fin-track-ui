@@ -1,6 +1,6 @@
 "use strict";
 
-import Request from "../../Utils/Request";
+import Request from "../../services/http";
 
 export default class {
     static getTransactions(extractor, file) {

@@ -15,16 +15,8 @@ async function request(path, method, data = {}, headers) {
     return response.data;
 }
 
-export default class {
-    static get(path, params) {
-        return request(path, 'GET', { params });
-    }
-
-    static post(path, data, headers) {
-        return request(path, 'POST', { data }, headers);
-    }
-
-    static delete(path) {
-        return request(path, 'DELETE');
-    }
-}
+export default {
+    get: (path, params) => request(path, "GET", { params }),
+    post: (path, data, headers) => request(path, "POST", { data }, headers),
+    delete: (path) => request(path, "DELETE")
+};
