@@ -3,13 +3,13 @@
 import React from "react";
 import { connect } from "react-redux";
 import Request from "../../Utils/Request";
-import { setUserAction } from 'AppRedux';
+import { setUserDetails } from "store";
 
 class Profile extends React.Component {
-    handleLogout() {
+    handleLogout = () => {
         Request.post("/user/logout").then(data => {
             if (data.success) {
-                setUserAction({});
+                this.props.dispatch(setUserDetails({}));
             } else {
                 console.error("Logout failed:", data.error);
             }
@@ -38,4 +38,4 @@ class Profile extends React.Component {
     }
 }
 
-export default connect(state => state)(Profile);
+export default connect(state=>state)(Profile);

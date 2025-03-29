@@ -1,22 +1,23 @@
 import React from "react";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import Request from "../../Utils/Request";
-import { GOOGLE_CLIENT_ID } from "../Config";
-import { setUserAction } from 'AppRedux';
+import { GOOGLE_CLIENT_ID } from "config";
+import { connect } from "react-redux";
+import { setUserDetails } from "store";
 
-export default class extends React.Component {
+class Login extends React.Component {
 
-    onSuccess(credentialResponse) {
+    onSuccess = (credentialResponse) => {
         Request.post("/user/login", { token: credentialResponse.credential }).then(data => {
             if (data.success) {
-                setUserAction(data.user);
+                this.props.dispatch(setUserDetails(data.user));
             } else {
                 console.error("Login failed:", data.error);
             }
         });
     }
 
-    onError() {
+    onError = () => {
         console.log("Google Login Failed");
     }
 
@@ -39,3 +40,5 @@ export default class extends React.Component {
         </div>);
     }
 }
+
+export default connect()(Login);

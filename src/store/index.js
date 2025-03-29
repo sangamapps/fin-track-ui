@@ -1,0 +1,1 @@
+export { setUserDetails } from "./userSlice";
