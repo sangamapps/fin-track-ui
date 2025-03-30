@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react";
+import { toast } from 'react-toastify';
 import transactionService from "@services/transactionService";
 import accountService from "@services/accountService";
 import TransactionsTable from "./TransactionsTable.jsx";
@@ -13,20 +14,22 @@ export default class View extends React.Component {
         accounts: [],
     }
 
-    updateTransaction = (transaction, transactionIndex) => {
-        transactionService.update(transaction).then(data => {
-            if (_.isEmpty(transactionIndex)) {
+    updateTransaction = (transaction, transactionIndex, callback = () => {}) => {
+        transactionService.upsert(transaction).then(data => {
+            toast.info("Transaction saved");
+            if (!_.isNumber(transactionIndex)) {
                 this.state.transactions.push(transaction);
             } else {
-                const existingTransaction = _.find(this.state.transactions, { _id: transaction._id });
-                _.assign(existingTransaction, transaction);
+                _.assign(this.state.transactions[transactionIndex], data);
             }
             this.forceUpdate();
+            callback();
         });
     }
 
     deleteTransaction = (transaction, transactionIndex) => {
         transactionService.delete(transaction._id).then(() => {
+            toast.info("Transaction deleted");
             this.state.transactions.splice(transactionIndex, 1);
             this.forceUpdate();
         });
@@ -42,7 +45,6 @@ export default class View extends React.Component {
                     </div>
                 </div>;
             }
-            return <div className="alert alert-info" role="alert">No transactions found</div>;
         }
         return <TransactionsTable transactions={transactions} accountsMap={_.keyBy(this.state.accounts, '_id')}
             updateTransaction={this.updateTransaction} deleteTransaction={this.deleteTransaction} />;
@@ -50,7 +52,6 @@ export default class View extends React.Component {
 
     render() {
         return <div className="">
-            <h3>Transactions</h3>
             {this.showTransactions()}
         </div>;
     }

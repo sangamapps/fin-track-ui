@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react";
+import { toast } from 'react-toastify';
 import Modal from "@modal/Modal.jsx";
 import accountService from "@services/accountService";
 import { ACCOUNT_GROUP } from "@config";
@@ -41,7 +42,10 @@ export default class CrudAccountModal extends React.Component {
             name,
             amount: parseFloat(amount),
             description,
-        }).then(data => this.props.onSave(data));
+        }).then(data => {
+            toast.info("Account saved successfully");
+            this.props.onSave(data);
+        });
     };
 
     getModalTitle() {

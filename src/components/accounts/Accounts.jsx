@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react";
+import { toast } from 'react-toastify';
 import { ACCOUNT_GROUP } from "@config";
 import CrudAccountModal from "./CrudAccountModal.jsx";
 import accountService from "@services/accountService";
@@ -30,7 +31,10 @@ export default class Accounts extends React.Component {
     };
 
     handleDelete = (id) => {
-        accountService.delete(id).then(this.getAccounts);
+        accountService.delete(id).then(() => {
+            toast.info("Account deleted successfully");
+            this.getAccounts();
+        });
     };
 
     getAccountsContainer() {

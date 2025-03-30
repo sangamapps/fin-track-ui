@@ -61,8 +61,9 @@ export default class Upload extends React.Component {
         </div>;
     }
 
-    updateTransaction = (transaction, transactionIndex) => {
+    updateTransaction = (transaction, transactionIndex, callback = () => {}) => {
         this.state.transactions[transactionIndex] = _.assign(this.state.transactions[transactionIndex], transaction);
+        callback();
     }
 
     deleteTransaction = (transaction, transactionIndex) => {
@@ -92,7 +93,7 @@ export default class Upload extends React.Component {
     }
 
     bulkSave = () => {
-        transactionService.bulkSave(this.state.selectedAccount, this.state.transactions);
+        transactionService.bulkSave(this.state.selectedAccount, this.state.transactions).then(()=>toast.info("Successfully saved transactions. Can be viewed in View page."));
     }
 
     getBulkSaveCard() {

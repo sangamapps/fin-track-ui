@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react";
+import { toast } from 'react-toastify';
 import Modal from "@modal/Modal.jsx";
 import ruleService from "@services/ruleService";
 
@@ -38,7 +39,10 @@ export default class CrudRuleModal extends React.Component {
             name,
             contains,
             tag: tag || name,
-        }).then(data => this.props.onSave(data));
+        }).then(data => {
+            toast.success("Rule saved successfully");
+            this.props.onSave(data);
+        });
     };
 
     getModalTitle() {
@@ -65,7 +69,7 @@ export default class CrudRuleModal extends React.Component {
                 </div>
                 <div className="mb-2">
                     <label className="form-label">Tag</label>
-                    <input type="text" className="form-control" name="tag" value={tag || name} onChange={this.handleChange} placeholder="Tag"required />
+                    <input type="text" className="form-control" name="tag" value={tag || name} onChange={this.handleChange} placeholder="Tag" required />
                 </div>
             </form>
         );

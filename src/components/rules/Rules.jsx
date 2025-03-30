@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react";
+import { toast } from 'react-toastify';
 import CrudRuleModal from "./CrudRuleModal.jsx";
 import ruleService from "@services/ruleService";
 
@@ -29,7 +30,10 @@ export default class Rules extends React.Component {
     };
 
     handleDelete = (id) => {
-        ruleService.delete(id).then(this.getRules);
+        ruleService.delete(id).then(() => {
+            toast.success("Rule deleted successfully");
+            this.getRules();
+        });
     };
 
     getRulesContainer() {

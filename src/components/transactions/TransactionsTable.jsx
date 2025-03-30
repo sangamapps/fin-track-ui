@@ -15,12 +15,12 @@ export default class TransactionsTable extends React.Component {
 
     state = {
         filteredTransactions: [],
-        startDateFilter: null,
-        endDateFilter: null,
-        accountGroupFilter: null,
-        accountFilter: null,
-        transactionTypeFilter: null,
-        tagFilter: null,
+        startDateFilter: "", // moment().startOf("month").format("YYYY-MM-DD"),
+        endDateFilter: "", // moment().format("YYYY-MM-DD"),
+        accountGroupFilter: "",
+        accountFilter: "",
+        transactionTypeFilter: "",
+        tagFilter: "",
         showRulesModal: false,
         showTransactionModal: false,
         selectedTransactionIndex: null,
@@ -29,8 +29,10 @@ export default class TransactionsTable extends React.Component {
 
     applyRules = (transactions, rules) => {
         transactions.forEach((transaction) => {
+            if (!transaction) return;
             rules.forEach(rule => {
                 const { _id, contains } = rule;
+                transaction.appliedRules = transaction.appliedRules || {};
                 if (_id in transaction.appliedRules) return;
                 const description = _.lowerCase(transaction.description);
                 const keywords = _.split(_.lowerCase(contains), ",");
@@ -43,9 +45,10 @@ export default class TransactionsTable extends React.Component {
     };
 
     updateTransaction = (transaction, transactionIndex) => {
-        this.props.updateTransaction(transaction, transactionIndex);
-        this.applyRules([this.props.transactions[transactionIndex]], _.values(this.state.rulesMap));
-        this.forceUpdate();
+        this.applyRules([transaction], _.values(this.state.rulesMap));
+        this.props.updateTransaction(transaction, transactionIndex, () => {
+            this.forceUpdate();
+        });
     }
 
     deleteTransaction = (transaction, transactionIndex) => {
@@ -88,7 +91,7 @@ export default class TransactionsTable extends React.Component {
         const { showTransactionModal, selectedTransactionIndex } = this.state;
         const selectedTransaction = selectedTransactionIndex >= 0 ? this.props.transactions[selectedTransactionIndex] : null;
         return <CrudTransactionModal show={showTransactionModal}
-            transaction={selectedTransaction} transactionIndex={selectedTransactionIndex}
+            transaction={selectedTransaction} transactionIndex={selectedTransactionIndex} accountsMap={this.props.accountsMap}
             onSave={this.handleTransactionSave} onClose={() => this.toggleTransactionModal()} />;
     }
 
@@ -201,24 +204,24 @@ export default class TransactionsTable extends React.Component {
     getFilters() {
         const { rulesMap } = this.state;
         const { accountsMap } = this.props;
-        return <div className="p-3 shadow-lg">
+        return <div className="p-3 shadow-lg bg-primary-subtle">
             <div className="row">
                 <div className="col-md-3 col-sm-12 mb-2">
                     <div className="input-group">
                         <span className="input-group-text">From</span>
-                        <input type="date" name="startDateFilter" className="form-control" onChange={this.handleFilterChange} />
+                        <input type="date" name="startDateFilter" value={this.state.startDateFilter} className="form-control" onChange={this.handleFilterChange} />
                     </div>
                 </div>
                 <div className="col-md-3 col-sm-12 mb-2">
                     <div className="input-group">
                         <span className="input-group-text">To</span>
-                        <input type="date" name="endDateFilter" className="form-control" onChange={this.handleFilterChange} />
+                        <input type="date" name="endDateFilter" value={this.state.endDateFilter} className="form-control" onChange={this.handleFilterChange} />
                     </div>
                 </div>
                 {accountsMap && <div className="col-md-3 col-sm-12 mb-2">
                     <div className="input-group">
                         <span className="input-group-text">Account Group</span>
-                        <select name="accountGroupFilter" className="form-control" onChange={this.handleFilterChange}>
+                        <select name="accountGroupFilter" value={this.state.accountGroupFilter} className="form-control" onChange={this.handleFilterChange}>
                             <option value="">All</option>
                             {_.keys(_.groupBy(this.props.accountsMap, "accountGroup")).map((accountGroup, index) => <option key={index} value={accountGroup}>{ACCOUNT_GROUP[accountGroup]}</option>)}
                         </select>
@@ -227,16 +230,16 @@ export default class TransactionsTable extends React.Component {
                 {accountsMap && <div className="col-md-3 col-sm-12 mb-2">
                     <div className="input-group">
                         <span className="input-group-text">Account</span>
-                        <select name="accountFilter" className="form-control" onChange={this.handleFilterChange}>
+                        <select name="accountFilter" value={this.state.accountFilter} className="form-control" onChange={this.handleFilterChange}>
                             <option value="">All</option>
-                            {_.values(this.props.accountsMap).map((account, index) => <option key={index} value={account._id}>{account.name} ({account.accountGroup})</option>)}
+                            {_.values(this.props.accountsMap).map((account, index) => <option key={index} value={account._id}>{account.name} ({ACCOUNT_GROUP[account.accountGroup]})</option>)}
                         </select>
                     </div>
                 </div>}
                 <div className="col-md-3 col-sm-12 mb-2">
                     <div className="input-group">
                         <span className="input-group-text">Transaction Type</span>
-                        <select name="transactionTypeFilter" className="form-control" onChange={this.handleFilterChange}>
+                        <select name="transactionTypeFilter" value={this.state.transactionTypeFilter} className="form-control" onChange={this.handleFilterChange}>
                             <option value="">All</option>
                             <option value={TRANSACTION_TYPES.DEBIT}>Debit</option>
                             <option value={TRANSACTION_TYPES.CREDIT}>Credit</option>
@@ -246,7 +249,7 @@ export default class TransactionsTable extends React.Component {
                 <div className="col-md-3 col-sm-12 mb-2">
                     <div className="input-group">
                         <span className="input-group-text">Tag</span>
-                        <select name="tagFilter" className="form-control" onChange={this.handleFilterChange}>
+                        <select name="tagFilter" value={this.state.tagFilter} className="form-control" onChange={this.handleFilterChange}>
                             <option value="">All</option>
                             <option value={"__NONE__"}>Others</option>
                             {_.values(rulesMap).map((rule, index) => <option key={index} value={rule._id}>{rule.tag}</option>)}
@@ -255,6 +258,14 @@ export default class TransactionsTable extends React.Component {
                 </div>
             </div>
         </div>;
+    }
+
+    getAddButton() {
+        return <button
+            className="btn btn-primary rounded-circle position-fixed bottom-0 end-0 m-4"
+            onClick={() => this.toggleTransactionModal()}
+            style={{ width: "50px", height: "50px" }}
+        >+</button>;
     }
 
     getFilteredTransactions() {
@@ -281,6 +292,7 @@ export default class TransactionsTable extends React.Component {
                 {this.getFilters()}
                 <SummaryTable transactions={filteredTransactions} />
                 <div className="row">{filteredTransactions.map(this.getTransaction)}</div>
+                {this.getAddButton()}
                 {this.getCrudRuleModal()}
                 {this.getCrudTransactionModal()}
             </div>
