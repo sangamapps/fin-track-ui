@@ -62,7 +62,7 @@ export default class CrudAccountModal extends React.Component {
                     <label className="form-label">Account Group</label>
                     <select className="form-control" name="accountGroup" value={accountGroup} onChange={this.handleChange} required>
                         <option></option>
-                        {Object.keys(ACCOUNT_GROUP).map((key, index) => (
+                        {_.keys(ACCOUNT_GROUP).map((key, index) => (
                             <option key={index} value={key}>{ACCOUNT_GROUP[key]}</option>
                         ))}
                     </select>

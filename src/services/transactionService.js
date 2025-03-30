@@ -10,4 +10,6 @@ export default {
         const headers = { "Content-Type": "multipart/form-data" };
         return http.post("/api/v1/transactions/extract", formData, headers);
     },
+    bulkSave: (transactions) => http.post("/api/v1/transactions/save", { transactions }),
+    getAll: () => http.get("/api/v1/transactions"),
 }

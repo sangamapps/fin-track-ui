@@ -33,31 +33,21 @@ export default class Accounts extends React.Component {
         accountService.delete(id).then(this.getAccounts);
     };
 
-    getLoader() {
-        return this.state.getAccountsLoadingStatus && <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
-        </div>
-    }
-
     getAccountsContainer() {
         const { accounts } = this.state;
 
         if (accounts.length === 0) {
             if (this.state.getAccountsLoadingStatus) {
-                return this.getLoader();
+                return <div className="spinner-border text-primary" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>;
             }
             return <div className="alert alert-info" role="alert">No accounts found</div>;
         }
 
-        const groupedAccounts = accounts.reduce((groups, account) => {
-            if (!groups[account.accountGroup]) {
-                groups[account.accountGroup] = [];
-            }
-            groups[account.accountGroup].push(account);
-            return groups;
-        }, {});
+        const groupedAccounts = _.groupBy(accounts, "accountGroup");
 
-        return Object.keys(groupedAccounts).map((group) => (
+        return _.keys(groupedAccounts).map((group) => (
             <div key={group} className="mt-3">
                 <h3>{ACCOUNT_GROUP[group]}</h3>
                 <ul className="list-group">

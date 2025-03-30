@@ -32,18 +32,14 @@ export default class Rules extends React.Component {
         ruleService.delete(id).then(this.getRules);
     };
 
-    getLoader() {
-        return this.state.getRulesLoadingStatus && <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
-        </div>
-    }
-
     getRulesContainer() {
         const { rules } = this.state;
 
         if (rules.length === 0) {
             if (this.state.getRulesLoadingStatus) {
-                return this.getLoader();
+                return <div className="spinner-border text-primary" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>;
             }
             return <div className="alert alert-info" role="alert">No rules found</div>;
         }

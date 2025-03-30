@@ -42,7 +42,7 @@ export default class CrudRuleModal extends React.Component {
     };
 
     getModalTitle() {
-        return this.props.rule ? "Edit Rule" : "Add Rule";
+        return this.props.rule?._id ? "Edit Rule" : "Add Rule";
     }
 
     onSubmitClick = () => {
@@ -61,7 +61,7 @@ export default class CrudRuleModal extends React.Component {
                 </div>
                 <div className="mb-2">
                     <label className="form-label">Contains</label>
-                    <input type="text" className="form-control" name="contains" value={contains} onChange={this.handleChange} required />
+                    <textarea className="form-control" name="contains" value={contains} onChange={this.handleChange} required />
                 </div>
                 <div className="mb-2">
                     <label className="form-label">Tag</label>

@@ -1,13 +1,20 @@
 "use strict";
 
 import React from "react";
-import Upload from "./Upload.jsx";
+import { Switch, Route } from "react-router-dom";
+import LazyLoad from "@components/lazy-load/LazyLoad.jsx";
 
-export default class Transactions extends React.Component {
+const routes = [
+    { path: '/transactions/view', component: <LazyLoad component={() => import('./View.jsx')} /> },
+    { path: '/transactions/upload-statement', component: <LazyLoad component={() => import('./Upload.jsx')} /> },
+];
 
-    render() {
-        return <div className="">
-            <Upload />
-        </div>;
-    }
+function getRoute(route, key) {
+    return <Route key={key} path={route.path} component={()=>route.component} />;
+}
+
+export default function getRoutes() {
+    return <Switch>
+        {routes.map(getRoute)}
+    </Switch>;
 }

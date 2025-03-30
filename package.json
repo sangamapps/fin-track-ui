@@ -38,6 +38,7 @@
     "@reduxjs/toolkit": "^2.6.1",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
     "jquery": "^3.7.1",
     "lodash": "^4.17.21",
     "moment": "^2.26.0",
