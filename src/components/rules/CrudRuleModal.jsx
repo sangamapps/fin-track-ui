@@ -37,7 +37,7 @@ export default class CrudRuleModal extends React.Component {
             _id: this.props.rule?._id || null,
             name,
             contains,
-            tag,
+            tag: tag || name,
         }).then(data => this.props.onSave(data));
     };
 
@@ -57,15 +57,15 @@ export default class CrudRuleModal extends React.Component {
             <form ref={this.formRef} onSubmit={this.handleSubmit}>
                 <div className="mb-2">
                     <label className="form-label">Name</label>
-                    <input type="text" className="form-control" name="name" value={name} onChange={this.handleChange} required />
+                    <input type="text" className="form-control" name="name" value={name} onChange={this.handleChange} placeholder="Rule Name" required />
                 </div>
                 <div className="mb-2">
                     <label className="form-label">Contains</label>
-                    <textarea className="form-control" name="contains" value={contains} onChange={this.handleChange} required />
+                    <textarea className="form-control" name="contains" value={contains} onChange={this.handleChange} placeholder="Keywords (eg: Keyword1, Keyword2)" required />
                 </div>
                 <div className="mb-2">
                     <label className="form-label">Tag</label>
-                    <input type="text" className="form-control" name="tag" value={tag} onChange={this.handleChange} required />
+                    <input type="text" className="form-control" name="tag" value={tag || name} onChange={this.handleChange} placeholder="Tag"required />
                 </div>
             </form>
         );

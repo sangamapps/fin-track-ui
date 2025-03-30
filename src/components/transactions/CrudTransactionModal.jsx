@@ -58,7 +58,7 @@ export default class CrudTransactionModal extends React.Component {
             <form ref={this.formRef} onSubmit={this.handleSubmit}>
                 <div className="mb-2">
                     <label className="form-label">Date</label>
-                    <input type="text" className="form-control" name="date" value={date} onChange={this.handleChange} required />
+                    <input type="date" className="form-control" name="date" value={date} onChange={this.handleChange} required />
                 </div>
                 <div className="mb-2">
                     <label className="form-label">Transaction Type</label>

@@ -22,8 +22,6 @@ export const TRANSACTION_COLUMNS_MAP = {
     [TRANSACTION_COLUMN_DESCRIPTION]: "Description",
 };
 
-export const TRANSACTION_COLUMNS = _.keys(TRANSACTION_COLUMNS_MAP);
-
 export const EXTRACTORS_MAP = {
     "HDFC_AS_XLS_V1": "HDFC - XLS - V1",
     "SBI_AS_XLS_V1": "SBI - XLS - V1",

@@ -4,6 +4,7 @@ import React from "react";
 import { toast } from 'react-toastify';
 import { EXTRACTORS_MAP } from "@config";
 import TransactionsTable from "./TransactionsTable.jsx";
+import accountService from "@services/accountService";
 import transactionService from "@services/transactionService";
 // import processedTransactionsSample from "./processedTransactionsSample.json";
 
@@ -14,6 +15,8 @@ export default class Upload extends React.Component {
         transactions: [],
         extractionStatus: false,
         extracted: 0,
+        selectedAccount: "",
+        accounts: [],
     };
 
     handleExtractorChange = (e) => {
@@ -38,7 +41,7 @@ export default class Upload extends React.Component {
     }
 
     getUploadCard() {
-        return <div className="card p-3 shadow-lg">
+        return <div className="p-3 shadow mb-3">
             <h3 className="mb-3">Upload Statement</h3>
             <div className="mb-3">
                 <label className="form-label">Select Extractor</label>
@@ -58,6 +61,14 @@ export default class Upload extends React.Component {
         </div>;
     }
 
+    updateTransaction = (transaction, transactionIndex) => {
+        this.state.transactions[transactionIndex] = _.assign(this.state.transactions[transactionIndex], transaction);
+    }
+
+    deleteTransaction = (transaction, transactionIndex) => {
+        this.state.transactions.splice(transactionIndex, 1);
+    }
+
     showTransactions() {
         const transactions = this.state.transactions;
         if (transactions.length == 0) {
@@ -71,16 +82,52 @@ export default class Upload extends React.Component {
             if (this.state.extracted) {
                 return <div className="mt-4 alert alert-danger">No transactions found</div>;
             }
+            return;
         }
-        return <TransactionsTable transactions={transactions} bulkSave={true} />;
+        return <TransactionsTable transactions={transactions} updateTransaction={this.updateTransaction} deleteTransaction={this.deleteTransaction} />;
+    }
+
+    handleAccountChange = (e) => {
+        this.setState({ selectedAccount: e.target.value });
+    }
+
+    bulkSave = () => {
+        transactionService.bulkSave(this.state.selectedAccount, this.state.transactions);
+    }
+
+    getBulkSaveCard() {
+        const { selectedAccount, accounts, transactions } = this.state;
+        if(_.isEmpty(transactions)) return;
+        return <div className="p-3 shadow-lg">
+            <div className="mb-3">
+                <select className="form-select" value={selectedAccount} onChange={this.handleAccountChange}>
+                    <option value="">Select Account</option>
+                    {accounts.map((account, index) => (
+                        <option key={index} value={account._id}>{account.name}</option>
+                    ))}
+                </select>
+            </div>
+            <div>
+                <button className="btn btn-primary" disabled={_.isEmpty(selectedAccount)} onClick={this.bulkSave}>Bulk Save</button>
+            </div>
+        </div>;
     }
 
     render() {
         return (
-            <div className="">
+            <div className="mb-3">
                 {this.getUploadCard()}
                 {this.showTransactions()}
+                {this.getBulkSaveCard()}
             </div>
         );
+    }
+
+    getAccounts = () => {
+        accountService.getAll().then(data => this.setState({ accounts: data.accounts }));
+    }
+
+    componentDidMount(){
+        this.getAccounts();
     }
 }

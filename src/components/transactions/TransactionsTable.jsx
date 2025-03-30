@@ -2,12 +2,14 @@
 
 import React from "react";
 import SummaryTable from "./SummaryTable.jsx";
-import { TRANSACTION_COLUMNS, TRANSACTION_COLUMNS_MAP } from "@config";
-import accountService from "@services/accountService";
+import { TRANSACTION_COLUMNS_MAP, TRANSACTION_COLUMN_DATE, TRANSACTION_COLUMN_AMOUNT, TRANSACTION_COLUMN_DESCRIPTION } from "@config";
 import ruleService from "@services/ruleService";
 import CrudRuleModal from "@components/rules/CrudRuleModal.jsx";
 import CrudTransactionModal from "./CrudTransactionModal.jsx";
-import transactionService from "@services/transactionService.js";
+
+const momentDate = (date) => {
+    return moment(date, "YYYY-MM-DD");
+}
 
 export default class TransactionsTable extends React.Component {
 
@@ -20,11 +22,7 @@ export default class TransactionsTable extends React.Component {
         showRulesModal: false,
         showTransactionModal: false,
         selectedTransactionIndex: null,
-        getAccountsLoadingStatus: false,
-        accounts: [],
-        getRulesLoadingStatus: false,
         rulesMap: {},
-        selectedAccount: "",
     }
 
     applyRules = (transactions, rules) => {
@@ -32,7 +30,9 @@ export default class TransactionsTable extends React.Component {
             rules.forEach(rule => {
                 const { _id, contains } = rule;
                 if (_id in transaction.appliedRules) return;
-                if (transaction.description.toLowerCase().includes(contains.toLowerCase())) {
+                const description = _.lowerCase(transaction.description);
+                const keywords = _.split(_.lowerCase(contains), ",");
+                if (_.some(keywords, (word) => description.includes(word))) {
                     transaction.appliedRules[_id] = 1;
                 }
             });
@@ -41,8 +41,13 @@ export default class TransactionsTable extends React.Component {
     };
 
     updateTransaction = (transaction, transactionIndex) => {
-        this.props.transactions[transactionIndex] = _.assign(this.props.transactions[transactionIndex], transaction);
+        this.props.updateTransaction(transaction, transactionIndex);
         this.applyRules([this.props.transactions[transactionIndex]], _.values(this.state.rulesMap));
+        this.forceUpdate();
+    }
+
+    deleteTransaction = (transaction, transactionIndex) => {
+        this.props.deleteTransaction(transaction, transactionIndex);
         this.forceUpdate();
     }
 
@@ -91,14 +96,14 @@ export default class TransactionsTable extends React.Component {
     }
 
     getDefaultTag(tag, bg) {
-        return <span className={"badge bg-" + bg + " me-1"}>
+        return <span className={"badge bg-" + bg + " mb-2 me-1"}>
             {tag}
         </span>
     }
 
     getTag(transaction, transactionIndex, rule_id) {
         const { rulesMap } = this.state;
-        return <div key={rule_id} className="badge bg-primary me-1">
+        return <div key={rule_id} className="badge bg-primary mb-2 me-1">
             {rulesMap[rule_id]?.tag}
             <span className="ms-1 cursor-pointer" onClick={() => this.removeTransactionTag(transaction, transactionIndex, rule_id)}>
                 &times;
@@ -106,45 +111,47 @@ export default class TransactionsTable extends React.Component {
         </div>;
     }
 
+    getTransactionTypeBg(transactionType) {
+        return transactionType == "CREDIT" ? "success" : "warning";
+    }
+
     getTags(transaction, transactionIndex) {
         const usedRules = _.keys(_.pickBy(transaction.appliedRules, v => v == 1));
-        return <div className="row mb-2">
-            <div className="col-8">
-                {this.getDefaultTag(transaction.transactionType, transaction.transactionType == "CREDIT" ? "success" : "warning")}
+        return <div className="d-flex ">
+            <div className="d-flex flex-wrap">
+                {this.getDefaultTag(transaction.transactionType, this.getTransactionTypeBg(transaction.transactionType))}
                 {usedRules.length == 0 && this.getDefaultTag("Others", "dark")}
                 {usedRules.map((rule_id) => this.getTag(transaction, transactionIndex, rule_id))}
+            </div>
+            <div className="ms-auto d-flex flex-wrap justify-content-end">
                 <span
-                    className="badge bg-secondary me-2 cursor-pointer"
+                    className="badge bg-secondary mb-2 me-1 cursor-pointer"
                     onClick={() => this.toggleRulesModal(transactionIndex)}
                 >
                     +
                 </span>
-            </div>
-            <div className="col-3">
-                {this.getTransactionActions(transactionIndex)}
+                <span className="badge bg-secondary cursor-pointer mb-2 me-1" onClick={() => this.toggleTransactionModal(transactionIndex)}><i className="bi bi-pencil"></i></span>
+                <span className="badge bg-danger cursor-pointer mb-2 me-1" onClick={() => this.deleteTransaction(transaction, transactionIndex)}><i className="bi bi-trash"></i></span>
             </div>
         </div>;
-    }
-
-    getTransactionActions(transactionIndex) {
-        return <div className="d-flex">
-            <span className="badge bg-warning cursor-pointer me-2" onClick={() => this.toggleTransactionModal(transactionIndex)}><i className="bi bi-pencil"></i></span>
-            <span className="badge bg-danger cursor-pointer"><i className="bi bi-trash"></i></span>
-        </div>
-            ;
     }
 
     getTransaction = (transaction, transactionIndex) => {
         if (!transaction) return;
         return <div key={transactionIndex} className="col-md-6 col-lg-4 mb-2">
-            <div className="card shadow">
+            <div className="card shadow-sm">
                 <div className="card-body">
                     {this.getTags(transaction, transactionIndex)}
-                    {TRANSACTION_COLUMNS.map((key) => (
-                        <div key={key} className="mb-1">
-                            <strong>{TRANSACTION_COLUMNS_MAP[key]}:</strong> {transaction[key]}
-                        </div>
-                    ))}
+                    <div className="mb-1">
+                        <strong>{TRANSACTION_COLUMNS_MAP[TRANSACTION_COLUMN_DATE]}:</strong> {momentDate(transaction[TRANSACTION_COLUMN_DATE]).format("MMMM D, YYYY (dddd)")}
+                    </div>
+                    <div className="mb-1">
+                        <strong>{TRANSACTION_COLUMNS_MAP[TRANSACTION_COLUMN_AMOUNT]}:</strong>
+                        <span className={"badge bg-" + this.getTransactionTypeBg(transaction.transactionType)}>₹{transaction[TRANSACTION_COLUMN_AMOUNT]}</span>
+                    </div>
+                    <div className="mb-1">
+                        <strong>{TRANSACTION_COLUMNS_MAP[TRANSACTION_COLUMN_DESCRIPTION]}:</strong> {[TRANSACTION_COLUMN_DESCRIPTION]}
+                    </div>
                 </div>
             </div>
         </div>;
@@ -161,7 +168,7 @@ export default class TransactionsTable extends React.Component {
 
     getFilters() {
         const { rulesMap } = this.state;
-        return <div className="card p-3 shadow">
+        return <div className="p-3 shadow-lg">
             <div className="row">
                 <div className="col-md-3 col-sm-12 mb-2">
                     <div className="fw-bold">From</div>
@@ -193,8 +200,9 @@ export default class TransactionsTable extends React.Component {
 
     getFilteredTransactions() {
         return _.map(this.props.transactions, (transaction) => {
-            if (!_.isEmpty(this.state.startDateFilter) && transaction.date <= this.state.startDateFilter) return null;
-            if (!_.isEmpty(this.state.endDateFilter) && transaction.date >= this.state.endDateFilter) return null;
+            const transactionDate = momentDate(transaction.date);
+            if (!_.isEmpty(this.state.startDateFilter) && transactionDate.isBefore(momentDate(this.state.startDateFilter))) return null;
+            if (!_.isEmpty(this.state.endDateFilter) && transactionDate.isAfter(momentDate(this.state.endDateFilter))) return null;
             if (!_.isEmpty(this.state.transactionTypeFilter) && transaction.transactionType != this.state.transactionTypeFilter) return null;
             if (!_.isEmpty(this.state.tagFilter)) {
                 if (this.state.tagFilter == "__NONE__" && _.size(_.pickBy(transaction.appliedRules, v => v == 1)) == 0) return transaction;
@@ -205,69 +213,27 @@ export default class TransactionsTable extends React.Component {
         });
     }
 
-    handleAccountChange = (e) => {
-        this.setState({ selectedAccount: e.target.value });
-    }
-
-    bulkSave = () => {
-        this.props.transactions.forEach((transaction) => {
-            transaction.account = this.state.selectedAccount;
-        });
-        transactionService.bulkSave(this.props.transactions);
-    }
-
-    getBulkSaveCard() {
-        return <div className="card p-3 shadow-lg">
-            <div className="mb-3">
-                <select className="form-select" value={this.state.selectedAccount} onChange={this.handleAccountChange}>
-                    <option value="">Select Account</option>
-                    {this.state.accounts.map((account, index) => (
-                        <option key={index} value={account._id}>{account.name}</option>
-                    ))}
-                </select>
-            </div>
-            <div>
-                <button className="btn btn-primary" disabled={_.isEmpty(this.state.selectedAccount) || _.isEmpty(this.props.transactions)} onClick={this.bulkSave}>Bulk Save</button>
-            </div>
-        </div>;
-    }
-
     render() {
         const filteredTransactions = this.getFilteredTransactions();
         return (
-            <div className="mt-4 overflow-auto">
+            <div className="mb-3">
                 {this.getFilters()}
                 <SummaryTable transactions={filteredTransactions} />
                 <div className="row">{filteredTransactions.map(this.getTransaction)}</div>
                 {this.getCrudRuleModal()}
                 {this.getCrudTransactionModal()}
-                {this.props.bulkSave && this.getBulkSaveCard()}
             </div>
         );
     }
 
-    getAccounts = () => {
-        this.setState({ getAccountsLoadingStatus: true }, () => {
-            accountService.getAll().then(data => {
-                this.setState({ getAccountsLoadingStatus: false, accounts: data.accounts });
-            });
-        });
-    }
-
     getRules = () => {
-        this.setState({ getRulesLoadingStatus: true }, () => {
-            ruleService.getAll().then(data => {
-                this.setState({
-                    getRulesLoadingStatus: false,
-                    rulesMap: _.mapValues(_.keyBy(data.rules, '_id')),
-                    transactions: this.applyRules(this.props.transactions, data.rules)
-                });
-            });
+        ruleService.getAll().then(data => {
+            this.applyRules(this.props.transactions, data.rules);
+            this.setState({ rulesMap: _.mapValues(_.keyBy(data.rules, '_id')) });
         });
     }
 
     componentDidMount() {
-        this.getAccounts();
         this.getRules();
     }
 }
