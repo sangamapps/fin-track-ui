@@ -49,7 +49,7 @@ class Layout extends React.Component {
                             <li className="nav-item dropdown">
                                 <span className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Transactions</span>
                                 <ul className="dropdown-menu">
-                                    <li>{this.getDropdownItem("/transactions/view", "View")}</li>
+                                    <li>{this.getDropdownItem("/transactions", "View")}</li>
                                     <li>{this.getDropdownItem("/transactions/upload-statement", "Upload Statement")}</li>
                                 </ul>
                             </li>
