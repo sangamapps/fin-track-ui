@@ -7,7 +7,7 @@ import accountService from "@services/accountService";
 
 export default class Accounts extends React.Component {
     state = {
-        getAccountsLoadingStatus: false,
+        getAccountsLoadingStatus: true,
         accounts: [],
         selectedAccount: null,
         showModal: false,
@@ -96,10 +96,8 @@ export default class Accounts extends React.Component {
     }
 
     getAccounts = () => {
-        this.setState({ getAccountsLoadingStatus: true }, () => {
-            accountService.getAll().then(data => {
-                this.setState({ getAccountsLoadingStatus: false, accounts: data.accounts });
-            });
+        accountService.getAll().then(data => {
+            this.setState({ getAccountsLoadingStatus: false, accounts: data.accounts });
         });
     }
 

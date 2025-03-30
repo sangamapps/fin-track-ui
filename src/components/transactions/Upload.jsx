@@ -97,7 +97,7 @@ export default class Upload extends React.Component {
 
     getBulkSaveCard() {
         const { selectedAccount, accounts, transactions } = this.state;
-        if(_.isEmpty(transactions)) return;
+        if (_.isEmpty(transactions)) return;
         return <div className="p-3 shadow-lg">
             <div className="mb-3">
                 <select className="form-select" value={selectedAccount} onChange={this.handleAccountChange}>
@@ -127,7 +127,7 @@ export default class Upload extends React.Component {
         accountService.getAll().then(data => this.setState({ accounts: data.accounts }));
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.getAccounts();
     }
 }

@@ -6,20 +6,30 @@ export const ACCOUNT_GROUP = {
     credit_card: "Credit Card",
 };
 
-export const TRANSACTION_COLUMN_DATE = "date";
-export const TRANSACTION_COLUMN_DESCRIPTION = "description";
-export const TRANSACTION_COLUMN_TYPE = "transactionType";
-export const TRANSACTION_COLUMN_AMOUNT = "amount";
-export const TRANSACTION_COLUMN_DEBIT = "debit";
-export const TRANSACTION_COLUMN_CREDIT = "credit";
-export const TRANSACTION_COLUMN_BALANCE = "balance";
-
 export const TRANSACTION_COLUMNS_MAP = {
-    [TRANSACTION_COLUMN_DATE]: "Date",
-    [TRANSACTION_COLUMN_TYPE]: "Transaction Type",
-    [TRANSACTION_COLUMN_AMOUNT]: "Amount",
-    [TRANSACTION_COLUMN_BALANCE]: "Balance",
-    [TRANSACTION_COLUMN_DESCRIPTION]: "Description",
+    DATE: "date",
+    ACCOUNT_GROUP: "accountGroup",
+    ACCOUNT: "account",
+    DESCRIPTION: "description",
+    TYPE: "transactionType",
+    AMOUNT: "amount",
+    DEBIT: "debit",
+    CREDIT: "credit",
+    BALANCE: "balance",
+};
+
+export const TRANSACTION_COLUMNS_LABEL_MAP = {
+    [TRANSACTION_COLUMNS_MAP.DATE]: "Date",
+    [TRANSACTION_COLUMNS_MAP.ACCOUNT_GROUP]: "Account Group",
+    [TRANSACTION_COLUMNS_MAP.ACCOUNT]: "Account",
+    [TRANSACTION_COLUMNS_MAP.TYPE]: "Transaction Type",
+    [TRANSACTION_COLUMNS_MAP.AMOUNT]: "Amount",
+    [TRANSACTION_COLUMNS_MAP.DESCRIPTION]: "Description",
+};
+
+export const TRANSACTION_TYPES = {
+    DEBIT: "DEBIT",
+    CREDIT: "CREDIT",
 };
 
 export const EXTRACTORS_MAP = {

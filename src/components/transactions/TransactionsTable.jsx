@@ -2,7 +2,7 @@
 
 import React from "react";
 import SummaryTable from "./SummaryTable.jsx";
-import { TRANSACTION_COLUMNS_MAP, TRANSACTION_COLUMN_DATE, TRANSACTION_COLUMN_AMOUNT, TRANSACTION_COLUMN_DESCRIPTION } from "@config";
+import { ACCOUNT_GROUP, TRANSACTION_COLUMNS_MAP, TRANSACTION_COLUMNS_LABEL_MAP, TRANSACTION_TYPES } from "@config";
 import ruleService from "@services/ruleService";
 import CrudRuleModal from "@components/rules/CrudRuleModal.jsx";
 import CrudTransactionModal from "./CrudTransactionModal.jsx";
@@ -17,6 +17,8 @@ export default class TransactionsTable extends React.Component {
         filteredTransactions: [],
         startDateFilter: null,
         endDateFilter: null,
+        accountGroupFilter: null,
+        accountFilter: null,
         transactionTypeFilter: null,
         tagFilter: null,
         showRulesModal: false,
@@ -112,7 +114,7 @@ export default class TransactionsTable extends React.Component {
     }
 
     getTransactionTypeBg(transactionType) {
-        return transactionType == "CREDIT" ? "success" : "warning";
+        return transactionType == TRANSACTION_TYPES.CREDIT ? "success" : "warning";
     }
 
     getTags(transaction, transactionIndex) {
@@ -136,22 +138,52 @@ export default class TransactionsTable extends React.Component {
         </div>;
     }
 
+    getTransactionDate(transaction) {
+        return <div className="mb-1">
+            <strong>{TRANSACTION_COLUMNS_LABEL_MAP[TRANSACTION_COLUMNS_MAP.DATE]}:</strong> {momentDate(transaction[TRANSACTION_COLUMNS_MAP.DATE]).format("MMMM D, YYYY (dddd)")}
+        </div>;
+    }
+
+    getTransactionAccountGroup(transaction) {
+        const { accountsMap } = this.props;
+        const accountId = transaction[TRANSACTION_COLUMNS_MAP.ACCOUNT];
+        return accountsMap && accountsMap[accountId] && <div className="mb-1">
+            <strong>{TRANSACTION_COLUMNS_LABEL_MAP[TRANSACTION_COLUMNS_MAP.ACCOUNT_GROUP]}:</strong> {ACCOUNT_GROUP[accountsMap[accountId].accountGroup]}
+        </div>;
+    }
+
+    getTransactionAccount(transaction) {
+        const { accountsMap } = this.props;
+        const accountId = transaction[TRANSACTION_COLUMNS_MAP.ACCOUNT];
+        return accountsMap && accountsMap[accountId] && <div className="mb-1">
+            <strong>{TRANSACTION_COLUMNS_LABEL_MAP[TRANSACTION_COLUMNS_MAP.ACCOUNT]}:</strong> {accountsMap[accountId].name}
+        </div>;
+    }
+
+    getTransactionAmount(transaction) {
+        return <div className="mb-1">
+            <strong>{TRANSACTION_COLUMNS_LABEL_MAP[TRANSACTION_COLUMNS_MAP.AMOUNT]}:</strong>
+            <span className={"badge bg-" + this.getTransactionTypeBg(transaction.transactionType)}>₹{transaction[TRANSACTION_COLUMNS_MAP.AMOUNT]}</span>
+        </div>
+    }
+
+    getTransactionDescription(transaction) {
+        return <div className="mb-1">
+            <strong>{TRANSACTION_COLUMNS_LABEL_MAP[TRANSACTION_COLUMNS_MAP.DESCRIPTION]}:</strong> {transaction[TRANSACTION_COLUMNS_MAP.DESCRIPTION]}
+        </div>;
+    }
+
     getTransaction = (transaction, transactionIndex) => {
         if (!transaction) return;
         return <div key={transactionIndex} className="col-md-6 col-lg-4 mb-2">
             <div className="card shadow-sm">
                 <div className="card-body">
                     {this.getTags(transaction, transactionIndex)}
-                    <div className="mb-1">
-                        <strong>{TRANSACTION_COLUMNS_MAP[TRANSACTION_COLUMN_DATE]}:</strong> {momentDate(transaction[TRANSACTION_COLUMN_DATE]).format("MMMM D, YYYY (dddd)")}
-                    </div>
-                    <div className="mb-1">
-                        <strong>{TRANSACTION_COLUMNS_MAP[TRANSACTION_COLUMN_AMOUNT]}:</strong>
-                        <span className={"badge bg-" + this.getTransactionTypeBg(transaction.transactionType)}>₹{transaction[TRANSACTION_COLUMN_AMOUNT]}</span>
-                    </div>
-                    <div className="mb-1">
-                        <strong>{TRANSACTION_COLUMNS_MAP[TRANSACTION_COLUMN_DESCRIPTION]}:</strong> {[TRANSACTION_COLUMN_DESCRIPTION]}
-                    </div>
+                    {this.getTransactionDate(transaction)}
+                    {this.getTransactionAccountGroup(transaction)}
+                    {this.getTransactionAccount(transaction)}
+                    {this.getTransactionAmount(transaction)}
+                    {this.getTransactionDescription(transaction)}
                 </div>
             </div>
         </div>;
@@ -168,31 +200,58 @@ export default class TransactionsTable extends React.Component {
 
     getFilters() {
         const { rulesMap } = this.state;
+        const { accountsMap } = this.props;
         return <div className="p-3 shadow-lg">
             <div className="row">
                 <div className="col-md-3 col-sm-12 mb-2">
-                    <div className="fw-bold">From</div>
-                    <input type="date" name="startDateFilter" className="form-control" onChange={this.handleFilterChange} />
+                    <div className="input-group">
+                        <span className="input-group-text">From</span>
+                        <input type="date" name="startDateFilter" className="form-control" onChange={this.handleFilterChange} />
+                    </div>
                 </div>
                 <div className="col-md-3 col-sm-12 mb-2">
-                    <div className="fw-bold">To</div>
-                    <input type="date" name="endDateFilter" className="form-control" onChange={this.handleFilterChange} />
+                    <div className="input-group">
+                        <span className="input-group-text">To</span>
+                        <input type="date" name="endDateFilter" className="form-control" onChange={this.handleFilterChange} />
+                    </div>
+                </div>
+                {accountsMap && <div className="col-md-3 col-sm-12 mb-2">
+                    <div className="input-group">
+                        <span className="input-group-text">Account Group</span>
+                        <select name="accountGroupFilter" className="form-control" onChange={this.handleFilterChange}>
+                            <option value="">All</option>
+                            {_.keys(_.groupBy(this.props.accountsMap, "accountGroup")).map((accountGroup, index) => <option key={index} value={accountGroup}>{ACCOUNT_GROUP[accountGroup]}</option>)}
+                        </select>
+                    </div>
+                </div>}
+                {accountsMap && <div className="col-md-3 col-sm-12 mb-2">
+                    <div className="input-group">
+                        <span className="input-group-text">Account</span>
+                        <select name="accountFilter" className="form-control" onChange={this.handleFilterChange}>
+                            <option value="">All</option>
+                            {_.values(this.props.accountsMap).map((account, index) => <option key={index} value={account._id}>{account.name} ({account.accountGroup})</option>)}
+                        </select>
+                    </div>
+                </div>}
+                <div className="col-md-3 col-sm-12 mb-2">
+                    <div className="input-group">
+                        <span className="input-group-text">Transaction Type</span>
+                        <select name="transactionTypeFilter" className="form-control" onChange={this.handleFilterChange}>
+                            <option value="">All</option>
+                            <option value={TRANSACTION_TYPES.DEBIT}>Debit</option>
+                            <option value={TRANSACTION_TYPES.CREDIT}>Credit</option>
+                        </select>
+                    </div>
                 </div>
                 <div className="col-md-3 col-sm-12 mb-2">
-                    <div className="fw-bold">Transaction Type</div>
-                    <select name="transactionTypeFilter" className="form-control" onChange={this.handleFilterChange}>
-                        <option value="">All</option>
-                        <option value={"DEBIT"}>Debit</option>
-                        <option value={"CREDIT"}>Credit</option>
-                    </select>
-                </div>
-                <div className="col-md-3 col-sm-12 mb-2">
-                    <div className="fw-bold">Tag</div>
-                    <select name="tagFilter" className="form-control" onChange={this.handleFilterChange}>
-                        <option value="">All</option>
-                        <option value={"__NONE__"}>Others</option>
-                        {_.values(rulesMap).map((rule, index) => <option key={index} value={rule._id}>{rule.tag}</option>)}
-                    </select>
+                    <div className="input-group">
+                        <span className="input-group-text">Tag</span>
+                        <select name="tagFilter" className="form-control" onChange={this.handleFilterChange}>
+                            <option value="">All</option>
+                            <option value={"__NONE__"}>Others</option>
+                            {_.values(rulesMap).map((rule, index) => <option key={index} value={rule._id}>{rule.tag}</option>)}
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>;
@@ -203,6 +262,8 @@ export default class TransactionsTable extends React.Component {
             const transactionDate = momentDate(transaction.date);
             if (!_.isEmpty(this.state.startDateFilter) && transactionDate.isBefore(momentDate(this.state.startDateFilter))) return null;
             if (!_.isEmpty(this.state.endDateFilter) && transactionDate.isAfter(momentDate(this.state.endDateFilter))) return null;
+            if (!_.isEmpty(this.state.accountGroupFilter) && this.props.accountsMap[transaction.account].accountGroup != this.state.accountGroupFilter) return null;
+            if (!_.isEmpty(this.state.accountFilter) && transaction.account != this.state.accountFilter) return null;
             if (!_.isEmpty(this.state.transactionTypeFilter) && transaction.transactionType != this.state.transactionTypeFilter) return null;
             if (!_.isEmpty(this.state.tagFilter)) {
                 if (this.state.tagFilter == "__NONE__" && _.size(_.pickBy(transaction.appliedRules, v => v == 1)) == 0) return transaction;
@@ -229,7 +290,7 @@ export default class TransactionsTable extends React.Component {
     getRules = () => {
         ruleService.getAll().then(data => {
             this.applyRules(this.props.transactions, data.rules);
-            this.setState({ rulesMap: _.mapValues(_.keyBy(data.rules, '_id')) });
+            this.setState({ rulesMap: _.keyBy(data.rules, '_id') });
         });
     }
 

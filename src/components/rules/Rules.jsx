@@ -6,7 +6,7 @@ import ruleService from "@services/ruleService";
 
 export default class Rules extends React.Component {
     state = {
-        getRulesLoadingStatus: false,
+        getRulesLoadingStatus: true,
         rules: [],
         selectedRule: null,
         showModal: false,
@@ -96,10 +96,8 @@ export default class Rules extends React.Component {
     }
 
     getRules = () => {
-        this.setState({ getRulesLoadingStatus: true }, () => {
-            ruleService.getAll().then(data => {
-                this.setState({ getRulesLoadingStatus: false, rules: data.rules });
-            });
+        ruleService.getAll().then(data => {
+            this.setState({ getRulesLoadingStatus: false, rules: data.rules });
         });
     }
 
