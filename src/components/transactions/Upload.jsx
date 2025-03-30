@@ -3,6 +3,7 @@
 import React from "react";
 import { toast } from 'react-toastify';
 import { EXTRACTORS_MAP } from "@config";
+import CrudAccountModal from "@components/accounts/CrudAccountModal.jsx";
 import TransactionsTable from "./TransactionsTable.jsx";
 import accountService from "@services/accountService";
 import transactionService from "@services/transactionService";
@@ -17,7 +18,12 @@ export default class Upload extends React.Component {
         extracted: 0,
         selectedAccount: "",
         accounts: [],
+        showAccountModal: false,
     };
+
+    toggleAccountModal = (selectedAccount = this.state.selectedAccount) => {
+        this.setState({ showAccountModal: !this.state.showAccountModal, selectedAccount });
+    }
 
     handleExtractorChange = (e) => {
         this.setState({ selectedExtractor: e.target.value, transactions: [], extracted: 0 });
@@ -96,22 +102,33 @@ export default class Upload extends React.Component {
         transactionService.bulkSave(this.state.selectedAccount, this.state.transactions).then(()=>toast.info("Successfully saved transactions. Can be viewed in View page."));
     }
 
+    handleAccountSave = (account) => {
+        this.state.accounts.push(account);
+        this.toggleAccountModal(account._id);
+    }
+
     getBulkSaveCard() {
         const { selectedAccount, accounts, transactions } = this.state;
         if (_.isEmpty(transactions)) return;
         return <div className="p-3 shadow-lg">
-            <div className="mb-3">
-                <select className="form-select" value={selectedAccount} onChange={this.handleAccountChange}>
+            <div className="mb-3 d-flex">
+                <select className="form-select me-2" value={selectedAccount} onChange={this.handleAccountChange}>
                     <option value="">Select Account</option>
                     {accounts.map((account, index) => (
                         <option key={index} value={account._id}>{account.name}</option>
                     ))}
                 </select>
+                <button className="btn btn-primary" onClick={() => this.toggleAccountModal()}>+</button>
             </div>
             <div>
                 <button className="btn btn-primary" disabled={_.isEmpty(selectedAccount)} onClick={this.bulkSave}>Bulk Save</button>
             </div>
         </div>;
+    }
+
+    getCrudRuleModal() {
+        const { showAccountModal } = this.state;
+        return <CrudAccountModal show={showAccountModal} onSave={this.handleAccountSave} onClose={() => this.toggleAccountModal()} />;
     }
 
     render() {
@@ -120,6 +137,7 @@ export default class Upload extends React.Component {
                 {this.getUploadCard()}
                 {this.showTransactions()}
                 {this.getBulkSaveCard()}
+                {this.getCrudRuleModal()}
             </div>
         );
     }
