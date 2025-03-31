@@ -8,7 +8,7 @@ class Layout extends React.Component {
 
     getProfileLink() {
         return <Link to="/profile" className="nav-link">
-            <img src={this.props.userInfo.picture} className="rounded-circle border" style={{ width: "50px", height: "50px", objectFit: "cover" }} />
+            <img src={this.props.user.info.picture} className="rounded-circle border" style={{ width: "50px", height: "50px", objectFit: "cover" }} />
         </Link>;
     }
 

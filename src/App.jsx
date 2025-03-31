@@ -28,7 +28,7 @@ function getRoutes() {
 }
 
 export default function () {
-    const { userInfo } = useSelector(state => state);
+    const userInfo = useSelector(state => state.user.info);
     return <div className="app-body">
         {userInfo && userInfo.email ? getRoutes() : <LazyLoad component={() => import('@components/login/Login.jsx')} />}
     </div>;

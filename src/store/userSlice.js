@@ -1,25 +1,29 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-let data = null;
+let info = null;
 try {
-    data = document.querySelector("meta[name='user-info']").content;
-    data = JSON.parse(data);
-    console.log("data::", data);
+    info = document.querySelector("meta[name='user-info']").content;
+    info = JSON.parse(info);
+    console.log("info::", info);
 } catch (e) {
-    console.log("data::", data);
-    data = null;
+    console.log("info::", info);
+    info = null;
     console.log("ERR::onParseUser", e);
 }
 
 const initialState = {
-    ...data,
+    info,
+    accounts: [],
+    rules: [],
 }
 
 const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        setUserDetails: (state, action) => action.payload
+        setUserDetails: (user, action) => {
+            user.info = action.payload;
+        }
     }
 });
 

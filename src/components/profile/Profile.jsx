@@ -16,7 +16,7 @@ class Profile extends React.Component {
         });
     }
     render() {
-        const { userInfo } = this.props;
+        const userInfo = this.props.user.info;
         return (
             <div className="">
                 <div className="card shadow-sm p-4">
