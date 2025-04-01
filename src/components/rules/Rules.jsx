@@ -1,51 +1,40 @@
 "use strict";
 
 import React from "react";
+import { connect } from "react-redux";
 import { toast } from 'react-toastify';
 import CrudRuleModal from "./CrudRuleModal.jsx";
-import ruleService from "@services/ruleService";
+import { deleteRuleRequest } from "@store";
 
-export default class Rules extends React.Component {
+class Rules extends React.Component {
     state = {
-        getRulesLoadingStatus: true,
-        rules: [],
         selectedRule: null,
         showModal: false,
     };
 
     toggleModal = (selectedRule = null) => {
-        return new Promise((resolve) => {
-            this.setState({ showModal: !this.state.showModal, selectedRule }, resolve);
-        });
+        this.setState({ showModal: !this.state.showModal, selectedRule });
     };
 
-    handleSave = (rule) => {
-        const existingRule = _.find(this.state.rules, { _id: rule._id });
-        if (existingRule) {
-            _.assign(existingRule, rule);
-        } else {
-            this.state.rules.push(rule);
-        }
-        this.toggleModal();
-    };
-
-    handleDelete = (id) => {
-        ruleService.delete(id).then(() => {
-            toast.success("Rule deleted successfully");
-            this.getRules();
+    handleDelete = (_id) => {
+        this.props.dispatch(deleteRuleRequest(_id)).then(() => {
+            toast.success("Rule deleted ✅");
         });
     };
 
     getRulesContainer() {
-        const { rules } = this.state;
+        const { rules, loadingRules } = this.props;
+
+        if (loadingRules) {
+            return <div className="mt-4 spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </div>;
+        }
 
         if (rules.length === 0) {
-            if (this.state.getRulesLoadingStatus) {
-                return <div className="spinner-border text-primary" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                </div>;
-            }
-            return <div className="alert alert-info" role="alert">No rules found</div>;
+            return <div className="mt-4">
+                <span className="text-muted">No rules found.</span>
+            </div>
         }
 
         return (
@@ -75,7 +64,7 @@ export default class Rules extends React.Component {
 
 
     getCrudRuleModal() {
-        return <CrudRuleModal show={this.state.showModal} rule={this.state.selectedRule} onSave={this.handleSave} onClose={() => this.toggleModal()} />;
+        return <CrudRuleModal show={this.state.showModal} rule={this.state.selectedRule} onClose={() => this.toggleModal()} />;
     }
 
     getAddButton() {
@@ -87,8 +76,6 @@ export default class Rules extends React.Component {
     }
 
     render() {
-        const { rules, showModal, selectedRule } = this.state;
-
         return (
             <div className="container mt-3">
                 <h1>Rules</h1>
@@ -98,14 +85,6 @@ export default class Rules extends React.Component {
             </div>
         );
     }
-
-    getRules = () => {
-        ruleService.getAll().then(data => {
-            this.setState({ getRulesLoadingStatus: false, rules: data.rules });
-        });
-    }
-
-    componentDidMount() {
-        this.getRules();
-    }
 }
+
+export default connect(state => _.pick(state.user, ["rules", "loadingRules"]))(Rules);

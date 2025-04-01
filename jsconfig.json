@@ -1,14 +1,14 @@
 {
   "compilerOptions": {
-    "baseUrl": "src",
+    "baseUrl": ".",
     "paths": {
-      "@components/*": ["components/*"],
-      "@services/*": ["services/*"],
-      "@store": ["store/index.js"],
-      "@store/*": ["store/*"],
-      "@styles/*": ["styles/*"],
-      "@utils/*": ["utils/*"],
-      "@config": ["config.js"],
+      "@components/*": ["src/components/*"],
+      "@services/*": ["src/services/*"],
+      "@store": ["src/store/index.js"],
+      "@store/*": ["src/store/*"],
+      "@styles/*": ["src/styles/*"],
+      "@utils/*": ["src/utils/*"],
+      "@config": ["src/config.js"]
     }
   }
 }

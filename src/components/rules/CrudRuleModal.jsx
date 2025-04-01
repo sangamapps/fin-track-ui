@@ -1,19 +1,21 @@
 "use strict";
 
 import React from "react";
+import { connect } from "react-redux";
 import { toast } from 'react-toastify';
 import Modal from "@modal/Modal.jsx";
-import ruleService from "@services/ruleService";
+import { upsertRuleRequest } from "@store";
 
 function getDerivedStateFromProps(props) {
     return {
+        _id: props.rule?._id || "",
         name: props.rule?.name || "",
         contains: props.rule?.contains || "",
         tag: props.rule?.tag || "",
     };
 }
 
-export default class CrudRuleModal extends React.Component {
+class CrudRuleModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = getDerivedStateFromProps(props);
@@ -32,16 +34,12 @@ export default class CrudRuleModal extends React.Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        const { name, contains, tag } = this.state;
 
-        ruleService.upsert({
-            _id: this.props.rule?._id || null,
-            name,
-            contains,
-            tag: tag || name,
-        }).then(data => {
-            toast.success("Rule saved successfully");
-            this.props.onSave(data);
+        this.state.tag = this.state.tag || this.state.name;
+        this.props.dispatch(upsertRuleRequest(this.state)).then(data => {
+            toast.info("Rule saved ✅");
+            const onSave = this.props.onSave || this.props.onClose || (() => { });
+            onSave(data.payload);
         });
     };
 
@@ -79,3 +77,5 @@ export default class CrudRuleModal extends React.Component {
         return <Modal show={this.props.show} title={this.getModalTitle()} body={this.getModalBody()} onClose={this.props.onClose} onSubmitClick={this.onSubmitClick} />;
     }
 }
+
+export default connect()(CrudRuleModal);

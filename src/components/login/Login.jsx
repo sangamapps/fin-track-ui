@@ -9,7 +9,7 @@ class Login extends React.Component {
 
     onSuccess = (credentialResponse) => {
         userService.login(credentialResponse.credential).then(data => {
-            if (data.success) {
+            if (data.user) {
                 this.props.dispatch(setUserDetails(data.user));
             } else {
                 console.error("Login failed:", data.error);

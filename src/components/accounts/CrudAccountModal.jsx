@@ -1,13 +1,15 @@
 "use strict";
 
 import React from "react";
+import { connect } from "react-redux";
 import { toast } from 'react-toastify';
 import Modal from "@modal/Modal.jsx";
-import accountService from "@services/accountService";
+import { upsertAccountRequest } from "@store";
 import { ACCOUNT_GROUP } from "@config";
 
 function getDerivedStateFromProps(props) {
     return {
+        _id: props.account?._id || "",
         accountGroup: props.account?.accountGroup || "",
         name: props.account?.name || "",
         amount: props.account?.amount || "",
@@ -15,7 +17,7 @@ function getDerivedStateFromProps(props) {
     };
 }
 
-export default class CrudAccountModal extends React.Component {
+class CrudAccountModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = getDerivedStateFromProps(props);
@@ -34,17 +36,11 @@ export default class CrudAccountModal extends React.Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        const { accountGroup, name, amount, description } = this.state;
 
-        accountService.upsert({
-            _id: this.props.account?._id || null,
-            accountGroup,
-            name,
-            amount: parseFloat(amount),
-            description,
-        }).then(data => {
-            toast.info("Account saved successfully");
-            this.props.onSave(data);
+        this.props.dispatch(upsertAccountRequest(this.state)).then(data => {
+            toast.info("Account saved ✅");
+            const onSave = this.props.onSave || this.props.onClose || (() => { });
+            onSave(data.payload);
         });
     };
 
@@ -91,3 +87,5 @@ export default class CrudAccountModal extends React.Component {
         return <Modal show={this.props.show} title={this.getModalTitle()} body={this.getModalBody()} onClose={this.props.onClose} onSubmitClick={this.onSubmitClick} />;
     }
 }
+
+export default connect()(CrudAccountModal);

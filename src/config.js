@@ -9,7 +9,7 @@ export const ACCOUNT_GROUP = {
 export const TRANSACTION_COLUMNS_MAP = {
     DATE: "date",
     ACCOUNT_GROUP: "accountGroup",
-    ACCOUNT: "account",
+    ACCOUNT_ID: "accountId",
     DESCRIPTION: "description",
     TYPE: "transactionType",
     AMOUNT: "amount",
@@ -21,7 +21,7 @@ export const TRANSACTION_COLUMNS_MAP = {
 export const TRANSACTION_COLUMNS_LABEL_MAP = {
     [TRANSACTION_COLUMNS_MAP.DATE]: "Date",
     [TRANSACTION_COLUMNS_MAP.ACCOUNT_GROUP]: "Account Group",
-    [TRANSACTION_COLUMNS_MAP.ACCOUNT]: "Account",
+    [TRANSACTION_COLUMNS_MAP.ACCOUNT_ID]: "Account",
     [TRANSACTION_COLUMNS_MAP.TYPE]: "Transaction Type",
     [TRANSACTION_COLUMNS_MAP.AMOUNT]: "Amount",
     [TRANSACTION_COLUMNS_MAP.DESCRIPTION]: "Description",

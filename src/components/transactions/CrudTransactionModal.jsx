@@ -1,20 +1,23 @@
 "use strict";
 
 import React from "react";
+import { connect } from "react-redux";
+import { toast } from "react-toastify";
 import Modal from "@modal/Modal.jsx";
 import { ACCOUNT_GROUP, TRANSACTION_TYPES } from "@config";
+import transactionService from "@services/transactionService";
 
 function getDerivedStateFromProps(props) {
     return {
         date: props.transaction?.date || moment().format("YYYY-MM-DD"),
         transactionType: props.transaction?.transactionType || TRANSACTION_TYPES.DEBIT,
-        account: props.transaction?.account || "",
+        accountId: props.transaction?.accountId || "",
         amount: props.transaction?.amount || 0,
         description: props.transaction?.description || "",
     };
 }
 
-export default class CrudTransactionModal extends React.Component {
+class CrudTransactionModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = getDerivedStateFromProps(props);
@@ -33,17 +36,12 @@ export default class CrudTransactionModal extends React.Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        const { date, description, account, transactionType, amount } = this.state;
-
-        const transaction = _.assign(this.props.transaction, {
-            date,
-            description,
-            account,
-            transactionType,
-            amount: parseFloat(amount),
-        });
-
-        this.props.onSave(transaction, this.props.transactionIndex)
+        const transaction = _.assign(this.props.transaction, this.state);
+        transaction["amount"] = parseFloat(transaction["amount"]);
+        transactionService.upsert(transaction).then(data => {
+            toast.info("Transaction saved ✅");
+            this.props.onSave(data.transaction);
+        })
     };
 
     getModalTitle() {
@@ -57,7 +55,7 @@ export default class CrudTransactionModal extends React.Component {
     }
 
     getModalBody() {
-        const { date, description, account, transactionType, amount } = this.state;
+        const { date, description, accountId, transactionType, amount } = this.state;
         const { accountsMap } = this.props;
         return (
             <form ref={this.formRef} onSubmit={this.handleSubmit}>
@@ -73,15 +71,15 @@ export default class CrudTransactionModal extends React.Component {
                         <option value="CREDIT">Credit</option>
                     </select>
                 </div>
-                {accountsMap && <div className="mb-2">
+                <div className="mb-2">
                     <label className="form-label">Account</label>
-                    <select className="form-select" name="account" value={account} onChange={this.handleChange} required>
+                    <select className="form-select" name="accountId" value={accountId} onChange={this.handleChange} required>
                         <option value=""></option>
                         {_.values(accountsMap).map((account, index) => (
                             <option key={index} value={account._id}>{account.name} ({ACCOUNT_GROUP[account.accountGroup]})</option>
                         ))}
                     </select>
-                </div>}
+                </div>
                 <div className="mb-2">
                     <label className="form-label">Amount</label>
                     <input type="number" className="form-control" name="amount" value={amount} onChange={this.handleChange} required />
@@ -98,3 +96,5 @@ export default class CrudTransactionModal extends React.Component {
         return <Modal show={this.props.show} title={this.getModalTitle()} body={this.getModalBody()} onClose={this.props.onClose} onSubmitClick={this.onSubmitClick} />;
     }
 }
+
+export default connect(state => _.pick(state.user, ["accountsMap"]))(CrudTransactionModal);

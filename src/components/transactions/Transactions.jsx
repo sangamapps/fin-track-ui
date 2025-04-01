@@ -6,6 +6,7 @@ import LazyLoad from "@components/lazy-load/LazyLoad.jsx";
 
 const routes = [
     { path: '/transactions', component: <LazyLoad component={() => import('./View.jsx')} /> },
+    { path: '/transactions/drafts', component: <LazyLoad component={() => import('./Draft.jsx')} /> },
     { path: '/transactions/upload-statement', component: <LazyLoad component={() => import('./Upload.jsx')} /> },
 ];
 

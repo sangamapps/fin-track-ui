@@ -3,12 +3,13 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { fetchAccountsRequest, fetchRulesRequest } from "@store";
 
 class Layout extends React.Component {
 
     getProfileLink() {
         return <Link to="/profile" className="nav-link">
-            <img src={this.props.user.info.picture} className="rounded-circle border" style={{ width: "50px", height: "50px", objectFit: "cover" }} />
+            <img src={this.props.userInfo.picture} className="rounded-circle border" style={{ width: "50px", height: "50px", objectFit: "cover" }} />
         </Link>;
     }
 
@@ -24,7 +25,7 @@ class Layout extends React.Component {
         return <Link to={to} className={"dropdown-item"}>{content}</Link>;
     }
 
-    getLoader(){
+    getLoader() {
         return <div className="d-flex justify-content-center">
             <div className="spinner-border" role="status">
                 <span className="visually-hidden">Loading...</span>
@@ -50,6 +51,7 @@ class Layout extends React.Component {
                                 <span className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Transactions</span>
                                 <ul className="dropdown-menu">
                                     <li>{this.getDropdownItem("/transactions", "View")}</li>
+                                    <li>{this.getDropdownItem("/transactions/drafts", "Drafts")}</li>
                                     <li>{this.getDropdownItem("/transactions/upload-statement", "Upload Statement")}</li>
                                 </ul>
                             </li>
@@ -74,6 +76,12 @@ class Layout extends React.Component {
             </div>
         </div>
     }
+
+    componentDidMount() {
+        this.props.dispatch(fetchAccountsRequest());
+        this.props.dispatch(fetchRulesRequest());
+    }
 }
 
-export default connect(state => state)(Layout);
+
+export default connect(state => ({ userInfo: state.user.info }))(Layout);

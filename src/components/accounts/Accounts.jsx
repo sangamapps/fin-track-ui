@@ -1,52 +1,41 @@
 "use strict";
 
 import React from "react";
+import { connect } from "react-redux";
 import { toast } from 'react-toastify';
-import { ACCOUNT_GROUP } from "@config";
 import CrudAccountModal from "./CrudAccountModal.jsx";
-import accountService from "@services/accountService";
+import { deleteAccountRequest } from "@store";
+import { ACCOUNT_GROUP } from "@config";
 
-export default class Accounts extends React.Component {
+class Accounts extends React.Component {
     state = {
-        getAccountsLoadingStatus: true,
-        accounts: [],
         selectedAccount: null,
         showModal: false,
     };
 
     toggleModal = (selectedAccount = null) => {
-        return new Promise((resolve) => {
-            this.setState({ showModal: !this.state.showModal, selectedAccount }, resolve);
-        });
+        this.setState({ showModal: !this.state.showModal, selectedAccount });
     };
 
-    handleSave = (account) => {
-        const existingAccount = _.find(this.state.accounts, { _id: account._id });
-        if (existingAccount) {
-            _.assign(existingAccount, account);
-        } else {
-            this.state.accounts.push(account);
-        }
-        this.toggleModal();
-    };
-
-    handleDelete = (id) => {
-        accountService.delete(id).then(() => {
-            toast.info("Account deleted successfully");
-            this.getAccounts();
+    handleDelete = (_id) => {
+        this.props.dispatch(deleteAccountRequest(_id)).then(() => {
+            toast.info("Account deleted ✅");
         });
     };
 
     getAccountsContainer() {
-        const { accounts } = this.state;
+        const { accounts, loadingAccounts } = this.props;
+
+        if (loadingAccounts) {
+            return <div className="mt-4 spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </div>;
+        }
 
         if (accounts.length === 0) {
-            if (this.state.getAccountsLoadingStatus) {
-                return <div className="spinner-border text-primary" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                </div>;
-            }
-            return <div className="alert alert-info" role="alert">No accounts found</div>;
+            return <div className="mt-4">
+                <span className="text-muted">No accounts found.</span>
+            </div>;
         }
 
         const groupedAccounts = _.groupBy(accounts, "accountGroup");
@@ -77,7 +66,7 @@ export default class Accounts extends React.Component {
     }
 
     getCrudAccountModal() {
-        return <CrudAccountModal show={this.state.showModal} account={this.state.selectedAccount} onSave={this.handleSave} onClose={() => this.toggleModal()} />;
+        return <CrudAccountModal show={this.state.showModal} account={this.state.selectedAccount} onClose={() => this.toggleModal()} />;
     }
 
     getAddButton() {
@@ -98,14 +87,6 @@ export default class Accounts extends React.Component {
             </div>
         );
     }
-
-    getAccounts = () => {
-        accountService.getAll().then(data => {
-            this.setState({ getAccountsLoadingStatus: false, accounts: data.accounts });
-        });
-    }
-
-    componentDidMount() {
-        this.getAccounts();
-    }
 }
+
+export default connect(state => _.pick(state.user, ["accounts", "loadingAccounts"]))(Accounts);
