@@ -6,13 +6,22 @@ import { ACCOUNT_GROUP, TRANSACTION_TYPES } from "@config";
 
 class FiltersView extends React.Component {
 
+    state = {
+        showFiltersView: false,
+    }
+
+    toggleFiltersView() {
+        this.setState({ showFiltersView: !this.state.showFiltersView });
+    }
+
     handleFilterChange = (e) => {
         this.props.handleFilterChange(e.target.name, e.target.value);
     };
 
-    render() {
+    getFilters() {
+        if (!this.state.showFiltersView) return <button className="btn btn-sm btn-primary me-2" onClick={() => this.toggleFiltersView()}>Show Filters</button>;
         const { accountsMap, rulesMap, filters } = this.props;
-        return <div className="p-3 shadow-lg bg-primary-subtle">
+        return <div>
             <div className="row">
                 <div className="col-lg-3 col-md-4 col-sm-12 mb-2">
                     <div className="input-group">
@@ -71,7 +80,14 @@ class FiltersView extends React.Component {
                     </div>
                 </div>
             </div>
-            <button className="btn btn-sm btn-primary" onClick={this.props.resetFilters}>Reset filters</button>
+            <button className="btn btn-sm btn-primary me-2" onClick={() => this.toggleFiltersView()}>Hide Filters</button>
+            <button className="btn btn-sm btn-primary me-2" onClick={this.props.resetFilters}>Reset Filters</button>
+        </div>;
+    }
+
+    render() {
+        return <div className="p-3 shadow-lg bg-primary-subtle">
+            {this.getFilters()}
         </div>;
     }
 }
