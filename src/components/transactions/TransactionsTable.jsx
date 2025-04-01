@@ -9,6 +9,7 @@ import SummaryTable from "./SummaryTable.jsx";
 import { ACCOUNT_GROUP, TRANSACTION_COLUMNS_MAP, TRANSACTION_COLUMNS_LABEL_MAP, TRANSACTION_TYPES } from "@config";
 import CrudRuleModal from "@components/rules/CrudRuleModal.jsx";
 import CrudTransactionModal from "./CrudTransactionModal.jsx";
+import ruleUtil from "@utils/ruleUtil"
 
 const momentDate = (date) => {
     return moment(date, "YYYY-MM-DD");
@@ -35,19 +36,6 @@ class TransactionsTable extends React.Component {
             tagFilter: "",
         }
     }
-
-    applyRules = (transaction, rules) => {
-        rules.forEach(rule => {
-            const { _id, contains } = rule;
-            transaction.appliedRules = transaction.appliedRules || {};
-            if (_id in transaction.appliedRules) return;
-            const description = _.lowerCase(transaction.description);
-            const keywords = _.split(_.lowerCase(contains), ",");
-            if (_.some(keywords, (word) => description.includes(word))) {
-                transaction.appliedRules[_id] = 1;
-            }
-        });
-    };
 
     updateTransaction = (transaction) => {
         this.setState((prevState) => {
@@ -298,7 +286,7 @@ class TransactionsTable extends React.Component {
             if (!_.isEmpty(this.state.accountGroupFilter) && this.props.accountsMap[transaction.accountId].accountGroup != this.state.accountGroupFilter) return false;
             if (!_.isEmpty(this.state.accountIdFilter) && transaction.accountId != this.state.accountIdFilter) return false;
             if (!_.isEmpty(this.state.transactionTypeFilter) && transaction.transactionType != this.state.transactionTypeFilter) return false;
-            this.applyRules(transaction, this.props.rules);
+            ruleUtil.applyRules(transaction, this.props.rules);
             if (!_.isEmpty(this.state.tagFilter)) {
                 if (this.state.tagFilter == "__NONE__" && _.size(_.pickBy(transaction.appliedRules, v => v == 1)) == 0) return transaction;
                 if (this.state.tagFilter in transaction.appliedRules && transaction.appliedRules[this.state.tagFilter] == 1) return transaction;
