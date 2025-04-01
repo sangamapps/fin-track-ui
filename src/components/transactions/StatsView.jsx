@@ -6,6 +6,7 @@ import {
 } from "recharts";
 
 export default function StatsView({ filteredTransactions }) {
+    if (filteredTransactions.length == 0) return <></>;
     const [groupBy, setGroupBy] = useState("accountGroup");
 
     const handleGroupChange = (event) => {
