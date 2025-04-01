@@ -109,18 +109,14 @@ class TransactionsView extends React.Component {
     }
 
     getTransactionAccountGroup(transaction) {
-        const { accountsMap } = this.props;
-        const accountId = transaction[TRANSACTION_COLUMNS_MAP.ACCOUNT_ID];
-        return accountsMap && accountsMap[accountId] && <div className="mb-1">
-            <strong>{TRANSACTION_COLUMNS_LABEL_MAP[TRANSACTION_COLUMNS_MAP.ACCOUNT_GROUP]}:</strong> {ACCOUNT_GROUP[accountsMap[accountId].accountGroup]}
+        return transaction.accountGroup && <div className="mb-1">
+            <strong>{TRANSACTION_COLUMNS_LABEL_MAP[TRANSACTION_COLUMNS_MAP.ACCOUNT_GROUP]}:</strong> {transaction.accountGroup}
         </div>;
     }
 
     getTransactionAccount(transaction) {
-        const { accountsMap } = this.props;
-        const accountId = transaction[TRANSACTION_COLUMNS_MAP.ACCOUNT_ID];
-        return accountsMap && accountsMap[accountId] && <div className="mb-1">
-            <strong>{TRANSACTION_COLUMNS_LABEL_MAP[TRANSACTION_COLUMNS_MAP.ACCOUNT_ID]}:</strong> {accountsMap[accountId].name}
+        return transaction.accountGroup && <div className="mb-1">
+            <strong>{TRANSACTION_COLUMNS_LABEL_MAP[TRANSACTION_COLUMNS_MAP.ACCOUNT_ID]}:</strong> {transaction.accountName}
         </div>;
     }
 
@@ -138,7 +134,6 @@ class TransactionsView extends React.Component {
     }
 
     getTransaction = (transaction, transactionIndex) => {
-        if (!transaction) return;
         return <div key={transactionIndex} className="col-md-6 col-lg-4 mb-2">
             <div className="card shadow-sm">
                 <div className="card-body">
