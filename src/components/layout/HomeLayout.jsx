@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchAccountsRequest, fetchRulesRequest } from "@store";
 
-class Layout extends React.Component {
+class HomeLayout extends React.Component {
 
     getProfileLink() {
         return <Link to="/profile" className="nav-link">
@@ -25,14 +25,6 @@ class Layout extends React.Component {
         return <Link to={to} className={"dropdown-item"}>{content}</Link>;
     }
 
-    getLoader() {
-        return <div className="d-flex justify-content-center">
-            <div className="spinner-border" role="status">
-                <span className="visually-hidden">Loading...</span>
-            </div>
-        </div>;
-    }
-
     render() {
         const { LayoutBody } = this.props;
         return <div>
@@ -45,13 +37,15 @@ class Layout extends React.Component {
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                             <li className="nav-item">
-                                {this.getNavLink("/", "Dashboard")}
+                                {this.getNavLink("/", "Stats")}
+                            </li>
+                            <li className="nav-item">
+                                {this.getNavLink("/transactions", "Transactions")}
                             </li>
                             <li className="nav-item dropdown">
-                                <span className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Transactions</span>
+                                <span className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Operations</span>
                                 <ul className="dropdown-menu">
-                                    <li>{this.getDropdownItem("/transactions", "View")}</li>
-                                    <li>{this.getDropdownItem("/transactions/drafts", "Drafts")}</li>
+                                    <li>{this.getDropdownItem("/transactions/drafts", "Edit Drafts")}</li>
                                     <li>{this.getDropdownItem("/transactions/upload-statement", "Upload Statement")}</li>
                                 </ul>
                             </li>
@@ -84,4 +78,4 @@ class Layout extends React.Component {
 }
 
 
-export default connect(state => ({ userInfo: state.user.info }))(Layout);
+export default connect(state => ({ userInfo: state.user.info }))(HomeLayout);

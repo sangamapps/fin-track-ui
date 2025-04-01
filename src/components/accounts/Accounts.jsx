@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import CrudAccountModal from "./CrudAccountModal.jsx";
 import { deleteAccountRequest } from "@store";
 import { ACCOUNT_GROUP } from "@config";
+import uiUtil from "@utils/uiUtil.js";
 
 class Accounts extends React.Component {
     state = {
@@ -27,9 +28,7 @@ class Accounts extends React.Component {
         const { accounts, loadingAccounts } = this.props;
 
         if (loadingAccounts) {
-            return <div className="mt-4 spinner-border text-primary" role="status">
-                <span className="visually-hidden">Loading...</span>
-            </div>;
+            return uiUtil.spinnerLoader("mt-4");
         }
 
         if (accounts.length === 0) {

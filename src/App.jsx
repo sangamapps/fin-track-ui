@@ -4,14 +4,13 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Switch, Route, Redirect } from "react-router-dom";
 import LazyLoad from "@components/lazy-load/LazyLoad.jsx";
-import Layout from "@components/layout/Layout.jsx";
+import Layout from "@components/layout/HomeLayout.jsx";
 
 const routes = [
-    { path: '/', exact: true, LayoutBody: <LazyLoad component={() => import('@components/dashboard/DashBoard.jsx')} /> },
-    { path: '/transactions', LayoutBody: <LazyLoad component={() => import('@components/transactions/Transactions.jsx')} /> },
     { path: '/accounts', LayoutBody: <LazyLoad component={() => import('@components/accounts/Accounts.jsx')} /> },
     { path: '/rules', LayoutBody: <LazyLoad component={() => import('@components/rules/Rules.jsx')} /> },
     { path: '/profile', LayoutBody: <LazyLoad component={() => import('@components/profile/Profile.jsx')} /> },
+    { path: '/', LayoutBody: <LazyLoad component={() => import('@components/transactions/TransactionsRoutes.jsx')} /> },
 ];
 
 function getRoute(route, key) {

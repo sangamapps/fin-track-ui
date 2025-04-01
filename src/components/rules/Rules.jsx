@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { toast } from 'react-toastify';
 import CrudRuleModal from "./CrudRuleModal.jsx";
 import { deleteRuleRequest } from "@store";
+import uiUtil from "@utils/uiUtil.js";
 
 class Rules extends React.Component {
     state = {
@@ -26,9 +27,7 @@ class Rules extends React.Component {
         const { rules, loadingRules } = this.props;
 
         if (loadingRules) {
-            return <div className="mt-4 spinner-border text-primary" role="status">
-                <span className="visually-hidden">Loading...</span>
-            </div>;
+            return uiUtil.spinnerLoader("mt-4");
         }
 
         if (rules.length === 0) {

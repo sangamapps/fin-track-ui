@@ -11,7 +11,8 @@ export default {
         const headers = { "Content-Type": "multipart/form-data" };
         return http.post("/api/v1/transactions/extract", formData, headers);
     },
-    bulkSave: () => http.post("/api/v1/transactions/save"),
+    saveDrafts: () => http.post("/api/v1/transactions/save-drafts"),
+    deleteDrafts: () => http.post("/api/v1/transactions/delete-drafts"),
     getAll: (startDate, endDate, isDraft) => http.get("/api/v1/transactions", {startDate, endDate, isDraft}),
     upsert: (transaction) => http.post("/api/v1/transaction", transaction),
     delete: (transactionId) => http.delete(`/api/v1/transaction/${transactionId}`),

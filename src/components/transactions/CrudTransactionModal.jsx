@@ -38,6 +38,9 @@ class CrudTransactionModal extends React.Component {
         e.preventDefault();
         const transaction = _.assign(this.props.transaction, this.state);
         transaction["amount"] = parseFloat(transaction["amount"]);
+        if (this.props.isDraft) {
+            transaction["isDraft"] = true;
+        }
         transactionService.upsert(transaction).then(data => {
             toast.info("Transaction saved ✅");
             this.props.onSave(data.transaction);

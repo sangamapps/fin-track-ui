@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { EXTRACTORS_MAP } from "@config";
 import CrudAccountModal from "@components/accounts/CrudAccountModal.jsx";
 import transactionService from "@services/transactionService";
+import uiUtil from "@utils/uiUtil";
 
 class Upload extends React.Component {
     state = {
@@ -81,16 +82,12 @@ class Upload extends React.Component {
     getResult() {
         const { extractionStatus, transactionsCount, extracted } = this.state;
         if (extractionStatus) {
-            return <div className="mt-4 d-flex justify-content-center">
-                <div className="spinner-border text-primary text-center" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                </div>
-            </div>;
+            return uiUtil.spinnerLoader("mt-4");
         }
         if (extracted) {
             return <div className="mt-4 alert alert-success">
                 <span>Extracted {transactionsCount} transactions. </span>
-                {transactionsCount > 0 && <span>Visit <Link to="/transactions/drafts">drafts</Link> page to edit and save transactions.</span>}
+                {transactionsCount > 0 && <span>Visit <Link to="/transactions/drafts">Edit Drafts</Link> page to edit and save draft transactions.</span>}
             </div>;
         }
         return;
