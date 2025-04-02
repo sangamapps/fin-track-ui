@@ -61,13 +61,13 @@ class TransactionsLayout extends React.Component {
     getNoTransactionsLabel() {
         if (this.props.isDraft) {
             return <div className="text-muted">No drafts transactions found.
-                <div>Visit <Link to="/transactions/upload-statement">Upload Statements</Link> page to extract transactions from statements.</div>
-                <div>Visit <Link to="/transactions">Transactions</Link> page to see the saved transactions.</div>
+                {/* <div>Visit <Link to="/transactions/upload-statement">Upload Statements</Link> page to extract transactions from statements.</div>
+                <div>Visit <Link to="/transactions">Transactions</Link> page to see the saved transactions.</div> */}
             </div>
         }
         return <div className="text-muted">No transactions found.
-            <div>Visit <Link to="/transactions/upload-statement">Upload Statements</Link> page to extract transactions from statements.</div>
-            <div>Visit <Link to="/transactions/drafts">Edit Drafts</Link> page to edit and save draft transactions.</div>
+            {/* <div>Visit <Link to="/transactions/upload-statement">Upload Statements</Link> page to extract transactions from statements.</div>
+            <div>Visit <Link to="/transactions/drafts">Edit Drafts</Link> page to edit and save draft transactions.</div> */}
         </div>
     }
 

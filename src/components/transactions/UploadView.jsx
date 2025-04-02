@@ -87,7 +87,7 @@ class Upload extends React.Component {
         if (extracted) {
             return <div className="mt-4 alert alert-success">
                 <span>Extracted {transactionsCount} transactions. </span>
-                {transactionsCount > 0 && <span>Visit <Link to="/transactions/drafts">Edit Drafts</Link> page to edit and save draft transactions.</span>}
+                {transactionsCount > 0 && <span>Visit <Link to="/transactions/drafts">Edit Drafts</Link> page to review and save draft transactions.</span>}
             </div>;
         }
         return;

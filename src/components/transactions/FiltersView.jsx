@@ -19,9 +19,9 @@ class FiltersView extends React.Component {
     };
 
     getFilters() {
-        if (!this.state.showFiltersView) return <button className="btn btn-sm btn-primary me-2" onClick={() => this.toggleFiltersView()}>Show Filters</button>;
+        if (!this.state.showFiltersView) return;
         const { accountsMap, rulesMap, filters } = this.props;
-        return <div>
+        return <div className="p-3 bg-primary-subtle">
             <div className="row">
                 <div className="col-lg-3 col-md-4 col-sm-12 mb-2">
                     <div className="input-group">
@@ -80,14 +80,23 @@ class FiltersView extends React.Component {
                     </div>
                 </div>
             </div>
-            <button className="btn btn-sm btn-primary me-2" onClick={() => this.toggleFiltersView()}>Hide Filters</button>
+            {/* <button className="btn btn-sm btn-primary me-2" onClick={() => this.toggleFiltersView()}>Hide Filters</button> */}
             <button className="btn btn-sm btn-primary me-2" onClick={this.props.resetFilters}>Reset Filters</button>
         </div>;
     }
 
+    getFiltersButton() {
+        return <button
+            className="btn btn-primary rounded-circle position-fixed bottom-0 start-0 m-4"
+            onClick={() => this.toggleFiltersView()}
+            style={{ width: "50px", height: "50px" }}
+        ><i class="bi bi-funnel-fill"></i></button>;
+    }
+
     render() {
-        return <div className="p-3 shadow-lg bg-primary-subtle">
+        return <div className="">
             {this.getFilters()}
+            {this.getFiltersButton()}
         </div>;
     }
 }
