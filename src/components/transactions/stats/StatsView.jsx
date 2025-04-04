@@ -25,6 +25,14 @@ const charts = [
         component: () => import("./TransactionCountTrends.jsx"),
         className: "col-sm-12 col-md-6 mb-3",
     },
+    {
+        component: () => import("./TransactionAmountCount.jsx"),
+        className: "col-sm-12 col-md-6 mb-3",
+    },
+    {
+        component: () => import("./TransactionAmountSum.jsx"),
+        className: "col-sm-12 col-md-6 mb-3",
+    },
 ];
 
 class StatsView extends React.Component {
