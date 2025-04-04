@@ -32,6 +32,11 @@ export const TRANSACTION_TYPES = {
     CREDIT: "CREDIT",
 };
 
+export const TRANSACTION_TYPES_LABEL_MAP = {
+    DEBIT: "Debit",
+    CREDIT: "Credit",
+};
+
 export const EXTRACTORS_MAP = {
     "HDFC_AS_XLS_V1": "HDFC - XLS - V1",
     "SBI_AS_XLS_V1": "SBI - XLS - V1",

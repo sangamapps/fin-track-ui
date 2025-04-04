@@ -1,5 +1,6 @@
 export {
     setUserDetails,
+    setStatsGroupByPeriod,
     fetchAccountsRequest,
     fetchRulesRequest,
     deleteAccountRequest,

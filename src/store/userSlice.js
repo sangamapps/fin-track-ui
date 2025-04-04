@@ -20,7 +20,8 @@ const initialState = {
     accounts: [],
     rules: [],
     accountsMap: {},
-    rulesMap: {}
+    rulesMap: {},
+    statsGroupByPeriod: "weekly",
 }
 
 export const fetchAccountsRequest = createAsyncThunk(
@@ -68,6 +69,9 @@ export const deleteRuleRequest = createAsyncThunk(
 const reducers = {
     setUserDetails: (user, action) => {
         user.info = action.payload;
+    },
+    setStatsGroupByPeriod: (user, action) => {
+        user.statsGroupByPeriod = action.payload;
     },
     upsertAccount: (user, action) => {
         const { account } = action.payload;
@@ -138,6 +142,7 @@ const userSlice = createSlice({
 
 export const {
     setUserDetails,
+    setStatsGroupByPeriod,
     upsertAccount,
     upsertRule,
     deleteAccount,

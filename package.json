@@ -44,11 +44,11 @@
     "moment": "^2.26.0",
     "popper.js": "^1.16.1",
     "react": "^16.13.1",
+    "react-chartjs-2": "^5.3.0",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.4",
     "react-router-dom": "^5.1.2",
     "react-toastify": "^5.5.0",
-    "react-transition-group": "^4.4.5",
-    "recharts": "^2.15.1"
+    "react-transition-group": "^4.4.5"
   }
 }

@@ -9,7 +9,7 @@ const routes = [
         path: '/',
         component: () => import("./TransactionsLayout.jsx"),
         props: {
-            LayoutBody: () => import('./StatsView.jsx'),
+            LayoutBody: () => import('./stats/StatsView.jsx'),
             startDateFilter: moment().startOf("year").format("YYYY-MM-DD"),
             endDateFilter: moment().format("YYYY-MM-DD"),
         }
