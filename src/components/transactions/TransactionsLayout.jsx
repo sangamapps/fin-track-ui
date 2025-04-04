@@ -22,6 +22,8 @@ class TransactionsLayout extends React.Component {
         return {
             startDateFilter: this.props.startDateFilter || "",
             endDateFilter: this.props.endDateFilter || "",
+            minAmountFilter: this.props.minAmountFilter || "",
+            maxAmountFilter: this.props.maxAmountFilter || "",
             accountGroupFilter: "",
             accountIdFilter: "",
             transactionTypeFilter: "",
@@ -34,6 +36,8 @@ class TransactionsLayout extends React.Component {
         return {
             startDateFilter: this.state.startDateFilter,
             endDateFilter: this.state.endDateFilter,
+            minAmountFilter: this.state.minAmountFilter,
+            maxAmountFilter: this.state.maxAmountFilter,
             accountGroupFilter: this.state.accountGroupFilter,
             accountIdFilter: this.state.accountIdFilter,
             transactionTypeFilter: this.state.transactionTypeFilter,

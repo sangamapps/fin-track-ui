@@ -23,16 +23,22 @@ class FiltersView extends React.Component {
         const { accountsMap, rulesMap, filters } = this.props;
         return <div className="p-3 bg-primary-subtle">
             <div className="row">
-                <div className="col-lg-3 col-md-4 col-sm-12 mb-2">
+                <div className="col-lg-6 col-md-6 col-sm-12 mb-2">
                     <div className="input-group">
                         <span className="input-group-text">From</span>
                         <input type="date" name="startDateFilter" value={filters.startDateFilter} className="form-control" onChange={this.handleFilterChange} />
-                    </div>
-                </div>
-                <div className="col-lg-3 col-md-4 col-sm-12 mb-2">
-                    <div className="input-group">
+                    
                         <span className="input-group-text">To</span>
                         <input type="date" name="endDateFilter" value={filters.endDateFilter} className="form-control" onChange={this.handleFilterChange} />
+                    </div>
+                </div>
+                <div className="col-lg-6 col-md-6 col-sm-12 mb-2">
+                    <div className="input-group">
+                        <span className="input-group-text">Min</span>
+                        <input type="number" name="minAmountFilter" value={filters.minAmountFilter} className="form-control" onChange={this.handleFilterChange} />
+                    
+                        <span className="input-group-text">Max</span>
+                        <input type="number" name="maxAmountFilter" value={filters.maxAmountFilter} className="form-control" onChange={this.handleFilterChange} />
                     </div>
                 </div>
                 {accountsMap && <div className="col-lg-3 col-md-4 col-sm-12 mb-2">
