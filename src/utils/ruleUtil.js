@@ -5,9 +5,9 @@ export default {
             const { _id, contains, tag } = rule;
             transaction.appliedRules = transaction.appliedRules || {};
             if (transaction.appliedRules[_id] == 0) return;
-            const description = _.lowerCase(transaction.description);
-            const keywords = _.split(_.lowerCase(contains), ",");
-            if (_.some(keywords, (word) => description.includes(word))) {
+            const description = _.toLower(transaction.description);
+            const keywords = _.split(_.toLower(contains), ",");
+            if (_.some(keywords, (word) => description.includes(_.trim(word)))) {
                 transaction.appliedRules[_id] = 1;
                 tags.push(tag);
             }

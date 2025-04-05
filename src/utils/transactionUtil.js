@@ -18,7 +18,7 @@ export default {
                 if (filters.tagFilter in transaction.appliedRules && transaction.appliedRules[filters.tagFilter] == 1) return true;
                 return false;
             }
-            if (!_.isEmpty(filters.searchFilter) && !_.includes(_.lowerCase(transaction.description), _.lowerCase(filters.searchFilter))) return false;
+            if (!_.isEmpty(filters.searchFilter) && !_.includes(_.toLower(transaction.description), _.toLower(filters.searchFilter))) return false;
             return true;
         });
     }
