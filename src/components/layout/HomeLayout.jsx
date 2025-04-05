@@ -37,17 +37,13 @@ class HomeLayout extends React.Component {
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                             <li className="nav-item">
-                                {this.getNavLink("/", "Stats")}
+                                {this.getNavLink("/", "Transactions")}
                             </li>
                             <li className="nav-item">
-                                {this.getNavLink("/transactions", "Transactions")}
+                                {this.getNavLink("/transactions/drafts", "Drafts")}
                             </li>
-                            <li className="nav-item dropdown">
-                                <span className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">Operations</span>
-                                <ul className="dropdown-menu">
-                                    <li>{this.getDropdownItem("/transactions/drafts", "Edit Drafts")}</li>
-                                    <li>{this.getDropdownItem("/transactions/upload-statement", "Upload Statement")}</li>
-                                </ul>
+                            <li className="nav-item">
+                                {this.getNavLink("/transactions/upload-statement", "Upload Statement")}
                             </li>
                             <li className="nav-item">
                                 {this.getNavLink("/accounts", "Accounts")}

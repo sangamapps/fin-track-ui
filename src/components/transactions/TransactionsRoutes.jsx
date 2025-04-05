@@ -9,21 +9,11 @@ const routes = [
         path: '/',
         component: () => import("./TransactionsLayout.jsx"),
         props: {
-            LayoutBody: () => import('./stats/StatsView.jsx'),
-            startDateFilter: moment().startOf("year").format("YYYY-MM-DD"),
-            endDateFilter: moment().format("YYYY-MM-DD"),
-            sortByDate: 1,
-        }
-    },
-    {
-        path: '/transactions',
-        component: () => import("./TransactionsLayout.jsx"),
-        props: {
             LayoutBody: () => import('./TransactionsView.jsx'),
             isDraft: false,
             startDateFilter: moment().startOf("year").format("YYYY-MM-DD"),
             endDateFilter: moment().format("YYYY-MM-DD"),
-            sortByDate: -1,
+            sortByDate: 1,
         }
     },
     {
@@ -32,7 +22,7 @@ const routes = [
         props: {
             LayoutBody: () => import('./TransactionsView.jsx'),
             isDraft: true,
-            sortByDate: -1,
+            sortByDate: 1,
         }
     },
     {

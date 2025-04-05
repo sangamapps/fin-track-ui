@@ -36,7 +36,7 @@ const TransactionAmountCount = ({ filteredTransactions }) => {
   return (
     <div className="card shadow-sm p-3">
       <h5 className="card-title">Transaction Count by Amount Range</h5>
-      <div className="chart-container" style={{ height: "400px" }}>
+      <div className="chart-container">
         <Bar data={chartData} options={options} />
       </div>
     </div>

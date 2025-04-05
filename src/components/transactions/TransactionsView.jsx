@@ -8,6 +8,7 @@ import SummaryTable from "./SummaryTable.jsx";
 import { ACCOUNT_GROUP, TRANSACTION_COLUMNS_MAP, TRANSACTION_COLUMNS_LABEL_MAP, TRANSACTION_TYPES } from "@config";
 import CrudRuleModal from "@components/rules/CrudRuleModal.jsx";
 import CrudTransactionModal from "./CrudTransactionModal.jsx";
+import StatsView from "./stats/StatsView.jsx";
 
 const momentDate = (date) => {
     return moment(date, "YYYY-MM-DD");
@@ -75,18 +76,18 @@ class TransactionsView extends React.Component {
         return <div className="d-flex ">
             <div className="d-flex flex-wrap">
                 {this.getDefaultTag(transaction.transactionType, this.getTransactionTypeBg(transaction.transactionType))}
-                {usedRules.length == 0 && this.getDefaultTag("Others", "dark")}
+                {usedRules.length == 0 && this.getDefaultTag("Others", "danger")}
                 {usedRules.map((rule_id) => this.getTag(transaction, rule_id))}
             </div>
             <div className="ms-auto d-flex flex-wrap justify-content-end">
                 <span
-                    className="badge bg-secondary mb-2 me-1 cursor-pointer"
+                    className="badge bg-dark mb-2 me-1 cursor-pointer"
                     onClick={() => this.toggleRulesModal(transaction)}
                 >
                     +
                 </span>
-                <span className="badge bg-secondary cursor-pointer mb-2 me-1" onClick={() => this.toggleTransactionModal(transaction)}><i className="bi bi-pencil"></i></span>
-                <span className="badge bg-danger cursor-pointer mb-2 me-1" onClick={() => this.props.deleteTransaction(transaction)}><i className="bi bi-trash"></i></span>
+                <span className="badge bg-dark cursor-pointer mb-2 me-1" onClick={() => this.toggleTransactionModal(transaction)}><i className="bi bi-pencil"></i></span>
+                <span className="badge bg-dark cursor-pointer mb-2 me-1" onClick={() => this.props.deleteTransaction(transaction)}><i className="bi bi-trash"></i></span>
             </div>
         </div>;
     }
@@ -138,14 +139,14 @@ class TransactionsView extends React.Component {
     }
 
     getTransactionsCountLabel(filteredTransactions) {
-        return <div className="mt-2 d-flex justify-content-center">
+        return <div className="d-flex justify-content-center">
             <span className="text-muted">Showing {filteredTransactions.length} of {this.props.transactions.length} transactions.</span>
         </div>;
     }
 
     getDraftActions(filteredTransactions) {
         // const isFiltered = filteredTransactions.length < this.props.transactions.length;
-        return this.props.isDraft && this.props.transactions.length > 0 && <div className="mb-2 d-flex justify-content-center">
+        return this.props.isDraft && this.props.transactions.length > 0 && <div className="mt-2 d-flex justify-content-center">
             <button className="btn btn-primary me-2" onClick={this.saveDrafts}>Save All</button>
             <button className="btn btn-danger" onClick={this.deleteDrafts}>Delete All</button>
         </div>;
@@ -153,10 +154,11 @@ class TransactionsView extends React.Component {
 
     getTransactions(filteredTransactions) {
         return this.props.transactions.length > 0 && <div>
-            {this.getTransactionsCountLabel(filteredTransactions)}
+            <StatsView filteredTransactions={filteredTransactions} />
             <SummaryTable transactions={filteredTransactions} />
+            {this.getTransactionsCountLabel(filteredTransactions)}
             {this.getDraftActions(filteredTransactions)}
-            <div className="row">{filteredTransactions.map(this.getTransaction)}</div>
+            <div className="row mt-2">{filteredTransactions.slice().reverse().map(this.getTransaction)}</div>
             {this.getDraftActions(filteredTransactions)}
         </div>;
     }
@@ -166,7 +168,7 @@ class TransactionsView extends React.Component {
             className="btn btn-dark rounded-circle position-fixed bottom-0 end-0 m-2"
             onClick={() => this.toggleTransactionModal()}
             style={{ width: "50px", height: "50px" }}
-        >+</button>;
+        ><i class="bi bi-database-fill-add"></i></button>;
     }
 
     saveDrafts = () => {

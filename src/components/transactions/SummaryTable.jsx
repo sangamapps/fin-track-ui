@@ -13,9 +13,10 @@ export default class SummaryTable extends React.Component {
         const totalCredits = _.sumBy(groupedTransactions[TRANSACTION_TYPES.CREDIT], (transaction) => transaction[TRANSACTION_COLUMNS_MAP.AMOUNT]);
         return (
             <div className="mt-2">
+                <h3>Summary</h3>
                 <table className="table table-bordered text-center">
                     <thead className="">
-                        <tr className="table-primary">
+                        <tr className="table-secondary">
                             <th>Total Debits</th>
                             <th>Total Credits</th>
                         </tr>

@@ -70,7 +70,7 @@ class Accounts extends React.Component {
 
     getAddButton() {
         return <button
-            className="btn btn-primary rounded-circle position-fixed bottom-0 end-0 m-4"
+            className="btn btn-dark rounded-circle position-fixed bottom-0 end-0 m-4"
             onClick={() => this.toggleModal()}
             style={{ width: "50px", height: "50px" }}
         >+</button>;
