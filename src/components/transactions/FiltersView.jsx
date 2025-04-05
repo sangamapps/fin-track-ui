@@ -27,7 +27,7 @@ class FiltersView extends React.Component {
                 <span className="input-group-text">To</span>
                 <input type="date" name="endDateFilter" value={filters.endDateFilter} className="form-control" onChange={this.handleFilterChange} />
                 <button className="btn btn-dark" onClick={() => this.props.resetDateFilter("startDateFilter", "")}>
-                    <i className="bi bi-x-circle-fill"></i>
+                    <i className="bi bi-eraser-fill"></i>
                 </button>
             </div>
         </div>
@@ -95,7 +95,7 @@ class FiltersView extends React.Component {
                 <i className="bi bi-eye-slash-fill"></i>
             </button>
             <button className="btn btn-sm btn-dark me-2" onClick={this.props.resetFilters}>
-                <i className="bi bi-x-circle-fill"></i>
+                <i className="bi bi-eraser-fill"></i>
             </button>
         </div>;
     }
