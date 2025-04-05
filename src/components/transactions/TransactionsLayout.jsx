@@ -6,8 +6,8 @@ import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import transactionService from "@services/transactionService";
 import FiltersView from "@components/transactions/FiltersView.jsx";
+import TransactionsView from "@components/transactions/TransactionsView.jsx";
 import transactionUtil from "@utils/transactionUtil";
-import LazyLoad from "@components/lazy-load/LazyLoad.jsx";
 import uiUtil from "@utils/uiUtil";
 
 class TransactionsLayout extends React.Component {
@@ -128,7 +128,7 @@ class TransactionsLayout extends React.Component {
     getLayoutBody() {
         const { LayoutBody } = this.props;
         const filteredTransactions = this.getFilteredTransactions();
-        return <LazyLoad component={LayoutBody} isDraft={this.props.isDraft}
+        return <TransactionsView isDraft={this.props.isDraft}
             transactions={this.state.transactions} filteredTransactions={filteredTransactions}
             updateTransaction={this.updateTransaction} deleteTransaction={this.deleteTransaction}
             fetchTransactions={this.fetchTransactions} />;
