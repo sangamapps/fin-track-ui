@@ -144,7 +144,7 @@ class TransactionsLayout extends React.Component {
 
     fetchTransactions = () => {
         this.setState({ transactions: [], transactionsLoading: true });
-        transactionService.getAll(this.state.startDateFilter, this.state.endDateFilter, this.props.isDraft).then(data => {
+        transactionService.getAll(this.state.startDateFilter, this.state.endDateFilter, this.props.isDraft, this.props.sortByDate).then(data => {
             this.setState({ transactions: data.transactions, transactionsLoading: false });
         });
     }

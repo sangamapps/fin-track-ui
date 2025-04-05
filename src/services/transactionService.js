@@ -13,7 +13,7 @@ export default {
     },
     saveDrafts: () => http.post("/api/v1/transactions/save-drafts"),
     deleteDrafts: () => http.post("/api/v1/transactions/delete-drafts"),
-    getAll: (startDate, endDate, isDraft) => http.get("/api/v1/transactions", {startDate, endDate, isDraft}),
+    getAll: (startDate, endDate, isDraft, sortByDate) => http.get("/api/v1/transactions", {startDate, endDate, isDraft, sortByDate}),
     upsert: (transaction) => http.post("/api/v1/transaction", transaction),
     delete: (transactionId) => http.delete(`/api/v1/transaction/${transactionId}`),
 }

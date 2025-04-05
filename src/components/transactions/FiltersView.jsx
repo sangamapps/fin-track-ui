@@ -20,7 +20,7 @@ class FiltersView extends React.Component {
 
     getDateFilter = () => {
         const { filters } = this.props;
-        return <div className="">
+        return <div className="mb-2">
             <div className="input-group m-0">
                 <span className="input-group-text">From</span>
                 <input type="date" name="startDateFilter" value={filters.startDateFilter} className="form-control" onChange={this.handleFilterChange} />
