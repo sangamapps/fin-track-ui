@@ -18,25 +18,30 @@ class FiltersView extends React.Component {
         this.props.handleFilterChange(e.target.name, e.target.value);
     };
 
+    getDateFilter = () => {
+        const { filters } = this.props;
+        return <div className="">
+            <div className="input-group row m-0">
+                <span className="col-1 input-group-text">From</span>
+                <input type="date" name="startDateFilter" value={filters.startDateFilter} className="col-1 form-control" onChange={this.handleFilterChange} />
+                <span className="col-1 input-group-text">To</span>
+                <input type="date" name="endDateFilter" value={filters.endDateFilter} className="col-1 form-control" onChange={this.handleFilterChange} />
+                <button className="col-1 btn btn-dark" onClick={() => this.props.resetDateFilter("startDateFilter", "")}>
+                    <i className="bi bi-x-circle-fill"></i>
+                </button>
+            </div>
+        </div>
+    }
+
     getFilters() {
         if (!this.state.showFiltersView) return this.getFiltersButton();
         const { accountsMap, rulesMap, filters } = this.props;
-        return <div className="p-3 bg-primary-subtle">
+        return <div className="p-3 bg-dark-subtle">
             <div className="row">
-                <div className="col-lg-6 col-md-6 col-sm-12 mb-2">
-                    <div className="input-group">
-                        <span className="input-group-text">From</span>
-                        <input type="date" name="startDateFilter" value={filters.startDateFilter} className="form-control" onChange={this.handleFilterChange} />
-                    
-                        <span className="input-group-text">To</span>
-                        <input type="date" name="endDateFilter" value={filters.endDateFilter} className="form-control" onChange={this.handleFilterChange} />
-                    </div>
-                </div>
-                <div className="col-lg-6 col-md-6 col-sm-12 mb-2">
+                <div className="col-lg-3 col-md-4 col-sm-12 mb-2">
                     <div className="input-group">
                         <span className="input-group-text">Min</span>
                         <input type="number" name="minAmountFilter" value={filters.minAmountFilter} className="form-control" onChange={this.handleFilterChange} />
-                    
                         <span className="input-group-text">Max</span>
                         <input type="number" name="maxAmountFilter" value={filters.maxAmountFilter} className="form-control" onChange={this.handleFilterChange} />
                     </div>
@@ -86,22 +91,29 @@ class FiltersView extends React.Component {
                     </div>
                 </div>
             </div>
-            <button className="btn btn-sm btn-primary me-2" onClick={() => this.toggleFiltersView()}>Hide Filters</button>
-            <button className="btn btn-sm btn-primary me-2" onClick={this.props.resetFilters}>Reset Filters</button>
+            <button className="btn btn-sm btn-dark me-2" onClick={() => this.toggleFiltersView()}>
+                <i className="bi bi-eye-slash-fill"></i>
+            </button>
+            <button className="btn btn-sm btn-dark me-2" onClick={this.props.resetFilters}>
+                <i className="bi bi-x-circle-fill"></i>
+            </button>
         </div>;
     }
 
     getFiltersButton() {
         return <button
-            className="btn btn-primary rounded-circle m-2"
+            className="btn btn-dark rounded-circle m-2"
             onClick={() => this.toggleFiltersView()}
             style={{ width: "50px", height: "50px" }}
         ><i className="bi bi-funnel-fill"></i></button>;
     }
 
     render() {
-        return <div className="position-fixed z-1 bottom-0 start-0">
-            {this.getFilters()}
+        return <div className="">
+            {this.getDateFilter()}
+            <div className="position-fixed z-1 bottom-0 start-0">
+                {this.getFilters()}
+            </div>
         </div>;
     }
 }

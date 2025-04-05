@@ -13,22 +13,16 @@ import uiUtil from "@utils/uiUtil";
 class TransactionsLayout extends React.Component {
 
     state = {
+        ...this.getInitialDateFilters(),
         ...this.getInitialFilters(),
         transactions: [],
         transactionsLoading: false,
     }
 
-    getInitialFilters() {
+    getInitialDateFilters() {
         return {
             startDateFilter: this.props.startDateFilter || "",
             endDateFilter: this.props.endDateFilter || "",
-            minAmountFilter: this.props.minAmountFilter || "",
-            maxAmountFilter: this.props.maxAmountFilter || "",
-            accountGroupFilter: "",
-            accountIdFilter: "",
-            transactionTypeFilter: "",
-            tagFilter: "",
-            searchFilter: "",
         }
     }
 
@@ -46,6 +40,26 @@ class TransactionsLayout extends React.Component {
         };
     }
 
+    getInitialFilters() {
+        return {
+            minAmountFilter: "",
+            maxAmountFilter: "",
+            accountGroupFilter: "",
+            accountIdFilter: "",
+            transactionTypeFilter: "",
+            tagFilter: "",
+            searchFilter: "",
+        };
+    }
+
+    handleDateFilterChange = (name, value) => {
+        this.setState({ [name]: value }, this.fetchTransactions);
+    };
+
+    resetDateFilter = () => {
+        this.setState(this.getInitialDateFilters(), this.fetchTransactions);
+    }
+
     handleFilterChange = (name, value) => {
         this.setState({ [name]: value }, () => {
             if (name == "startDateFilter" || name == "endDateFilter") {
@@ -55,11 +69,11 @@ class TransactionsLayout extends React.Component {
     };
 
     resetFilters = () => {
-        this.setState(this.getInitialFilters(), this.fetchTransactions);
+        this.setState(this.getInitialFilters());
     }
 
     getFiltersView() {
-        return <FiltersView filters={this.getFilters()} handleFilterChange={this.handleFilterChange} resetFilters={this.resetFilters} />
+        return <FiltersView filters={this.getFilters()} handleFilterChange={this.handleFilterChange} resetFilters={this.resetFilters} resetDateFilter={this.resetDateFilter} />
     }
 
     getNoTransactionsLabel() {

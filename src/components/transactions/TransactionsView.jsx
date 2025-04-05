@@ -21,17 +21,6 @@ class TransactionsView extends React.Component {
         selectedTransaction: null,
     }
 
-    getInitialFilters() {
-        return {
-            startDateFilter: this.props.startDateFilter || "",
-            endDateFilter: this.props.endDateFilter || "",
-            accountGroupFilter: "",
-            accountIdFilter: "",
-            transactionTypeFilter: "",
-            tagFilter: "",
-        }
-    }
-
     toggleRulesModal = (selectedTransaction) => {
         this.setState({ showRulesModal: !this.state.showRulesModal, selectedTransaction });
     }
@@ -174,7 +163,7 @@ class TransactionsView extends React.Component {
 
     getAddButton() {
         return <button
-            className="btn btn-primary rounded-circle position-fixed bottom-0 end-0 m-2"
+            className="btn btn-dark rounded-circle position-fixed bottom-0 end-0 m-2"
             onClick={() => this.toggleTransactionModal()}
             style={{ width: "50px", height: "50px" }}
         >+</button>;
