@@ -93,14 +93,14 @@ class FiltersView extends React.Component {
 
     getFiltersButton() {
         return <button
-            className="btn btn-primary rounded-circle"
+            className="btn btn-primary rounded-circle m-2"
             onClick={() => this.toggleFiltersView()}
             style={{ width: "50px", height: "50px" }}
         ><i className="bi bi-funnel-fill"></i></button>;
     }
 
     render() {
-        return <div className="position-fixed bottom-0 start-0 m-2 z-1">
+        return <div className="position-fixed z-1 bottom-0 start-0">
             {this.getFilters()}
         </div>;
     }

@@ -174,7 +174,7 @@ class TransactionsView extends React.Component {
 
     getAddButton() {
         return <button
-            className="btn btn-primary rounded-circle position-fixed bottom-0 end-0 m-4"
+            className="btn btn-primary rounded-circle position-fixed bottom-0 end-0 m-2"
             onClick={() => this.toggleTransactionModal()}
             style={{ width: "50px", height: "50px" }}
         >+</button>;
