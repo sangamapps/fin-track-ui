@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 const TransactionAmountSum = ({ filteredTransactions }) => {
     const rules = useSelector(state=>state.user.rules);
-    const sums = rules.map(({ _id, tag}) => {
+    let sums = rules.map(({ _id, tag}) => {
         const txns = filteredTransactions.filter(txn => txn.appliedRules[_id] == 1);
         return { label: tag, sum: _.sumBy(txns, "amount") };
     });
@@ -12,6 +12,7 @@ const TransactionAmountSum = ({ filteredTransactions }) => {
         label: "Untagged",
         sum: _.sumBy(filteredTransactions.filter(txn => txn.tags.length == 0), "amount"),
     });
+    sums = sums.filter(s => s.sum > 0);
 
     const chartData = {
         labels: sums.map(g => g.label),
