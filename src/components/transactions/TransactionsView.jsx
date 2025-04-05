@@ -168,7 +168,7 @@ class TransactionsView extends React.Component {
             className="btn btn-dark rounded-circle position-fixed bottom-0 end-0 m-2"
             onClick={() => this.toggleTransactionModal()}
             style={{ width: "50px", height: "50px" }}
-        ><i class="bi bi-database-fill-add"></i></button>;
+        ><i className="bi bi-database-fill-add"></i></button>;
     }
 
     saveDrafts = () => {

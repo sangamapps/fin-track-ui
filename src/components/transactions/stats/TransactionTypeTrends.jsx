@@ -23,7 +23,7 @@ const TransactionTypeTrends = ({ filteredTransactions, timeFilter, transactionTy
         label: `${transactionTypeLabel} Transactions (INR)`,
         data: transactionData,
         borderColor: transactionType === "CREDIT" ? "#28a745" : "#dc3545",
-        backgroundColor: transactionType === "CREDIT" ? "rgba(40, 167, 69, 0.2)" : "rgba(220, 53, 69, 0.2)",
+        backgroundColor: transactionType === "CREDIT" ? "rgb(40, 167, 70)" : "rgb(220, 53, 70)",
         fill: true
     }];
 

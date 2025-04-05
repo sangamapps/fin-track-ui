@@ -27,7 +27,7 @@ const BalanceTrends = ({ filteredTransactions, timeFilter }) => {
         label: "Balance (INR)",
         data: balanceData,
         borderColor: "#007bff",
-        backgroundColor: "rgba(0, 123, 255, 0.2)",
+        backgroundColor: "rgb(0, 123, 255)",
         fill: true
     }];
 

@@ -12,7 +12,7 @@ export default {
     },
     getTransactionAmountRange: () => {
         return [
-            { label: "< ₹50", min: 0, max: 49 },
+            { label: "< ₹50", min: 0, max: 50 },
             { label: "₹51 – ₹100", min: 51, max: 100 },
             { label: "₹101 – ₹500", min: 101, max: 500 },
             { label: "₹501 – ₹1,000", min: 501, max: 1000 },
