@@ -21,12 +21,12 @@ class FiltersView extends React.Component {
     getDateFilter = () => {
         const { filters } = this.props;
         return <div className="">
-            <div className="input-group row m-0">
-                <span className="col-1 input-group-text">From</span>
-                <input type="date" name="startDateFilter" value={filters.startDateFilter} className="col-1 form-control" onChange={this.handleFilterChange} />
-                <span className="col-1 input-group-text">To</span>
-                <input type="date" name="endDateFilter" value={filters.endDateFilter} className="col-1 form-control" onChange={this.handleFilterChange} />
-                <button className="col-1 btn btn-dark" onClick={() => this.props.resetDateFilter("startDateFilter", "")}>
+            <div className="input-group m-0">
+                <span className="input-group-text">From</span>
+                <input type="date" name="startDateFilter" value={filters.startDateFilter} className="form-control" onChange={this.handleFilterChange} />
+                <span className="input-group-text">To</span>
+                <input type="date" name="endDateFilter" value={filters.endDateFilter} className="form-control" onChange={this.handleFilterChange} />
+                <button className="btn btn-dark" onClick={() => this.props.resetDateFilter("startDateFilter", "")}>
                     <i className="bi bi-x-circle-fill"></i>
                 </button>
             </div>
