@@ -4,6 +4,8 @@ export const ACCOUNT_GROUP = {
     bank: "Bank",
     cash: "Cash",
     credit_card: "Credit Card",
+    stocks: "Stocks",
+    others: "Others",
 };
 
 export const TRANSACTION_COLUMNS_MAP = {
