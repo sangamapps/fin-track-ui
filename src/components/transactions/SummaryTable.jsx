@@ -11,7 +11,7 @@ export default class SummaryTable extends React.Component {
         if (_.isEmpty(transactions) || _.isEmpty(accounts)) return <></>;
 
         const transactionAccountIds = _.uniq(transactions.map(tx => tx.accountId));
-        const filteredAccounts = accounts.filter(acc => transactionAccountIds.includes(acc._id || acc.id));
+        const filteredAccounts = accounts.filter(acc => transactionAccountIds.includes(acc._id || acc.id) && !acc.accountGroup.includes("others"));
         
         const accountSummaries = filteredAccounts.map((account) => {
             const accountId = account._id || account.id;
