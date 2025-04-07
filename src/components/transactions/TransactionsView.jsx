@@ -98,15 +98,9 @@ class TransactionsView extends React.Component {
         </div>;
     }
 
-    getTransactionAccountGroup(transaction) {
-        return transaction.accountGroup && <div className="mb-1">
-            <strong>{TRANSACTION_COLUMNS_LABEL_MAP[TRANSACTION_COLUMNS_MAP.ACCOUNT_GROUP]}:</strong> {transaction.accountGroup}
-        </div>;
-    }
-
     getTransactionAccount(transaction) {
         return transaction.accountGroup && <div className="mb-1">
-            <strong>{TRANSACTION_COLUMNS_LABEL_MAP[TRANSACTION_COLUMNS_MAP.ACCOUNT_ID]}:</strong> {transaction.accountName}
+            <strong>{TRANSACTION_COLUMNS_LABEL_MAP[TRANSACTION_COLUMNS_MAP.ACCOUNT_ID]}:</strong> {transaction.accountName} ({transaction.accountGroup})
         </div>;
     }
 
@@ -118,8 +112,16 @@ class TransactionsView extends React.Component {
     }
 
     getTransactionDescription(transaction) {
-        return <div className="mb-1">
-            <strong>{TRANSACTION_COLUMNS_LABEL_MAP[TRANSACTION_COLUMNS_MAP.DESCRIPTION]}:</strong> {transaction[TRANSACTION_COLUMNS_MAP.DESCRIPTION]}
+        const description = transaction[TRANSACTION_COLUMNS_MAP.DESCRIPTION];
+        return !_.isEmpty(description) && <div className="mb-1">
+            <strong>{TRANSACTION_COLUMNS_LABEL_MAP[TRANSACTION_COLUMNS_MAP.DESCRIPTION]}:</strong> {description}
+        </div>;
+    }
+
+    getTransactionComments(transaction) {
+        const comments = transaction[TRANSACTION_COLUMNS_MAP.COMMENTS];
+        return !_.isEmpty(comments) && <div className="mb-1">
+            <strong>{TRANSACTION_COLUMNS_LABEL_MAP[TRANSACTION_COLUMNS_MAP.COMMENTS]}:</strong> {comments}
         </div>;
     }
 
@@ -129,10 +131,10 @@ class TransactionsView extends React.Component {
                 <div className="card-body">
                     {this.getTags(transaction)}
                     {this.getTransactionDate(transaction)}
-                    {this.getTransactionAccountGroup(transaction)}
                     {this.getTransactionAccount(transaction)}
                     {this.getTransactionAmount(transaction)}
                     {this.getTransactionDescription(transaction)}
+                    {this.getTransactionComments(transaction)}
                 </div>
             </div>
         </div>;

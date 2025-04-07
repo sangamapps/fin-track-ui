@@ -13,6 +13,7 @@ export const TRANSACTION_COLUMNS_MAP = {
     ACCOUNT_GROUP: "accountGroup",
     ACCOUNT_ID: "accountId",
     DESCRIPTION: "description",
+    COMMENTS: "comments",
     TYPE: "transactionType",
     AMOUNT: "amount",
     DEBIT: "debit",
@@ -27,6 +28,7 @@ export const TRANSACTION_COLUMNS_LABEL_MAP = {
     [TRANSACTION_COLUMNS_MAP.TYPE]: "Transaction Type",
     [TRANSACTION_COLUMNS_MAP.AMOUNT]: "Amount",
     [TRANSACTION_COLUMNS_MAP.DESCRIPTION]: "Description",
+    [TRANSACTION_COLUMNS_MAP.COMMENTS]: "Comments",
 };
 
 export const TRANSACTION_TYPES = {
