@@ -9,6 +9,7 @@ import { ACCOUNT_GROUP, TRANSACTION_COLUMNS_MAP, TRANSACTION_COLUMNS_LABEL_MAP, 
 import CrudRuleModal from "@components/rules/CrudRuleModal.jsx";
 import CrudTransactionModal from "./CrudTransactionModal.jsx";
 import StatsView from "./stats/StatsView.jsx";
+import amountUtil from "@utils/amountUtil.js";
 
 const momentDate = (date) => {
     return moment(date, "YYYY-MM-DD");
@@ -68,7 +69,7 @@ class TransactionsView extends React.Component {
     }
 
     getTransactionTypeBg(transactionType) {
-        return transactionType == TRANSACTION_TYPES.CREDIT ? "success" : "warning";
+        return transactionType == TRANSACTION_TYPES.CREDIT ? "success" : "danger";
     }
 
     getTags(transaction) {
@@ -76,18 +77,18 @@ class TransactionsView extends React.Component {
         return <div className="d-flex ">
             <div className="d-flex flex-wrap">
                 {this.getDefaultTag(transaction.transactionType, this.getTransactionTypeBg(transaction.transactionType))}
-                {usedRules.length == 0 && this.getDefaultTag("Others", "danger")}
+                {usedRules.length == 0 && this.getDefaultTag("Others", "dark")}
                 {usedRules.map((rule_id) => this.getTag(transaction, rule_id))}
             </div>
             <div className="ms-auto d-flex flex-wrap justify-content-end">
                 <span
-                    className="badge bg-dark mb-2 me-1 cursor-pointer"
+                    className="badge bg-secondary mb-2 me-1 cursor-pointer"
                     onClick={() => this.toggleRulesModal(transaction)}
                 >
                     +
                 </span>
-                <span className="badge bg-dark cursor-pointer mb-2 me-1" onClick={() => this.toggleTransactionModal(transaction)}><i className="bi bi-pencil"></i></span>
-                <span className="badge bg-dark cursor-pointer mb-2 me-1" onClick={() => this.props.deleteTransaction(transaction)}><i className="bi bi-trash"></i></span>
+                <span className="badge bg-secondary cursor-pointer mb-2 me-1" onClick={() => this.toggleTransactionModal(transaction)}><i className="bi bi-pencil"></i></span>
+                <span className="badge bg-secondary cursor-pointer mb-2 me-1" onClick={() => this.props.deleteTransaction(transaction)}><i className="bi bi-trash"></i></span>
             </div>
         </div>;
     }
@@ -107,7 +108,7 @@ class TransactionsView extends React.Component {
     getTransactionAmount(transaction) {
         return <div className="mb-1">
             <strong>{TRANSACTION_COLUMNS_LABEL_MAP[TRANSACTION_COLUMNS_MAP.AMOUNT]}: </strong>
-            <span className={"badge bg-" + this.getTransactionTypeBg(transaction.transactionType)}>₹{transaction[TRANSACTION_COLUMNS_MAP.AMOUNT].toLocaleString("en-IN")}</span>
+            <span className={"badge bg-" + this.getTransactionTypeBg(transaction.transactionType)}>₹{amountUtil.getFormattedAmount(transaction[TRANSACTION_COLUMNS_MAP.AMOUNT])}</span>
         </div>
     }
 

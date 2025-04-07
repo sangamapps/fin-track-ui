@@ -7,6 +7,7 @@ import CrudAccountModal from "./CrudAccountModal.jsx";
 import { deleteAccountRequest } from "@store";
 import { ACCOUNT_GROUP } from "@config";
 import uiUtil from "@utils/uiUtil.js";
+import amountUtil from "@utils/amountUtil.js";
 
 class Accounts extends React.Component {
     state = {
@@ -23,16 +24,6 @@ class Accounts extends React.Component {
             toast.info("Account deleted ✅");
         });
     };
-
-    getFormattedAmount(amount) {
-        return amount.toLocaleString("en-IN", {
-            minimumFractionDigits: 2,
-        });
-    }
-
-    getParsedAmount(amount) {
-        return this.getFormattedAmount(parseFloat(amount));
-    }
 
     getAccountsContainer() {
         const { accounts, loadingAccounts } = this.props;
@@ -57,7 +48,7 @@ class Accounts extends React.Component {
                     <div className="d-flex justify-content-between align-items-center">
                         <h3 className="mb-0">{ACCOUNT_GROUP[group]}</h3>
                         <span className="badge bg-primary">
-                            Closing Balance: ₹{this.getFormattedAmount(closingBalance)}
+                            Closing Balance: ₹{amountUtil.getFormattedAmount(closingBalance)}
                         </span>
                     </div>
                     <ul className="list-group mt-2">
@@ -69,19 +60,19 @@ class Accounts extends React.Component {
                                     <div className="text-muted d-block mt-1 fs-6">
                                         <div>
                                             Opening Balance:
-                                            <span>₹{this.getParsedAmount(acc.amount)}</span>
+                                            <span>₹{amountUtil.getParsedAmount(acc.amount)}</span>
                                         </div>
                                         <div>
                                             Total Credit:{" "}
-                                            <span className="text-success">₹{this.getParsedAmount(acc.totalCredit)}</span>
+                                            <span className="text-success">₹{amountUtil.getParsedAmount(acc.totalCredit)}</span>
                                         </div>
                                         <div>
                                             Total Debit:{" "}
-                                            <span className="text-danger">₹{this.getParsedAmount(acc.totalDebit)}</span>
+                                            <span className="text-danger">₹{amountUtil.getParsedAmount(acc.totalDebit)}</span>
                                         </div>
                                         <div>
                                             Closing Balance:{" "}
-                                            <strong>₹{this.getParsedAmount(acc.currentBalance)}</strong>
+                                            <strong>₹{amountUtil.getParsedAmount(acc.currentBalance)}</strong>
                                         </div>
                                     </div>
                                 </div>

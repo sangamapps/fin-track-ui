@@ -46,7 +46,7 @@ export default class Modal extends React.Component {
 
     render() {
         return (
-            <CSSTransition in={this.props.show} timeout={500} classNames="modal-container" unmountOnExit>
+            <CSSTransition in={this.props.show} timeout={490} classNames="modal-container" unmountOnExit>
                 <div>
                     <div className="modal-backdrop fade show"></div>
                     <div className="modal fade show d-block">

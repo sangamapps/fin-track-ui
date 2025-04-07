@@ -36,7 +36,7 @@ class FiltersView extends React.Component {
     getFilters() {
         if (!this.state.showFiltersView) return this.getFiltersButton();
         const { accountsMap, rulesMap, filters } = this.props;
-        return <div className="p-3 bg-dark-subtle" style={{ maxWidth: "500px" }}>
+        return <div className="p-3 bg-dark rounded-end-1" style={{ maxWidth: "500px" }}>
             <div className="row">
                 <div className="col-12 mb-2">
                     <div className="input-group">
@@ -91,10 +91,10 @@ class FiltersView extends React.Component {
                     </div>
                 </div>
             </div>
-            <button className="btn btn-dark me-2" onClick={() => this.toggleFiltersView()}>
+            <button className="btn btn-secondary me-2" onClick={() => this.toggleFiltersView()}>
                 <i className="bi bi-x-lg"></i>
             </button>
-            <button className="btn btn-dark me-2" onClick={this.props.resetFilters}>
+            <button className="btn btn-secondary me-2" onClick={this.props.resetFilters}>
                 <i className="bi bi-trash-fill"></i>
             </button>
         </div>;

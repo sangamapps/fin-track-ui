@@ -2,6 +2,7 @@
 
 import React from "react";
 import { TRANSACTION_COLUMNS_MAP, TRANSACTION_TYPES, ACCOUNT_GROUP } from "@config";
+import amountUtil from "@utils/amountUtil.js";
 
 export default class SummaryTable extends React.Component {
 
@@ -59,18 +60,18 @@ export default class SummaryTable extends React.Component {
                             {accountSummaries.map((acc, idx) => (
                                 <tr key={idx}>
                                     <td>{acc.name} ({acc.accountGroup})</td>
-                                    <td className="text-muted">{acc.opening.toLocaleString("en-IN")}</td>
-                                    <td className="text-danger">{acc.debits.toLocaleString("en-IN")}</td>
-                                    <td className="text-success">{acc.credits.toLocaleString("en-IN")}</td>
-                                    <td className="fw-bold">{acc.closing.toLocaleString("en-IN")}</td>
+                                    <td className="text-muted">{amountUtil.getFormattedAmount(acc.opening)}</td>
+                                    <td className="text-danger">{amountUtil.getFormattedAmount(acc.debits)}</td>
+                                    <td className="text-success">{amountUtil.getFormattedAmount(acc.credits)}</td>
+                                    <td className="fw-bold">{amountUtil.getFormattedAmount(acc.closing)}</td>
                                 </tr>
                             ))}
                             <tr className="table-secondary fw-bold">
                                 <td>Total</td>
-                                <td>{cumulative.opening.toLocaleString("en-IN")}</td>
-                                <td>{cumulative.debits.toLocaleString("en-IN")}</td>
-                                <td>{cumulative.credits.toLocaleString("en-IN")}</td>
-                                <td>{cumulative.closing.toLocaleString("en-IN")}</td>
+                                <td>{amountUtil.getFormattedAmount(cumulative.opening)}</td>
+                                <td>{amountUtil.getFormattedAmount(cumulative.debits)}</td>
+                                <td>{amountUtil.getFormattedAmount(cumulative.credits)}</td>
+                                <td>{amountUtil.getFormattedAmount(cumulative.closing)}</td>
                             </tr>
                         </tbody>
                     </table>
