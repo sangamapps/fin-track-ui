@@ -36,9 +36,9 @@ class FiltersView extends React.Component {
     getFilters() {
         if (!this.state.showFiltersView) return this.getFiltersButton();
         const { accountsMap, rulesMap, filters } = this.props;
-        return <div className="p-3 bg-dark-subtle">
+        return <div className="p-3 bg-dark-subtle" style={{ maxWidth: "500px" }}>
             <div className="row">
-                <div className="col-lg-3 col-md-4 col-sm-12 mb-2">
+                <div className="col-12 mb-2">
                     <div className="input-group">
                         <span className="input-group-text">Min</span>
                         <input type="number" name="minAmountFilter" value={filters.minAmountFilter} className="form-control" onChange={this.handleFilterChange} />
@@ -46,7 +46,7 @@ class FiltersView extends React.Component {
                         <input type="number" name="maxAmountFilter" value={filters.maxAmountFilter} className="form-control" onChange={this.handleFilterChange} />
                     </div>
                 </div>
-                {accountsMap && <div className="col-lg-3 col-md-4 col-sm-12 mb-2">
+                {accountsMap && <div className="col-12 mb-2">
                     <div className="input-group">
                         <span className="input-group-text">Account Group</span>
                         <select name="accountGroupFilter" value={filters.accountGroupFilter} className="form-control" onChange={this.handleFilterChange}>
@@ -55,7 +55,7 @@ class FiltersView extends React.Component {
                         </select>
                     </div>
                 </div>}
-                {accountsMap && <div className="col-lg-3 col-md-4 col-sm-12 mb-2">
+                {accountsMap && <div className="col-12 mb-2">
                     <div className="input-group">
                         <span className="input-group-text">Account</span>
                         <select name="accountIdFilter" value={filters.accountIdFilter} className="form-control" onChange={this.handleFilterChange}>
@@ -64,7 +64,7 @@ class FiltersView extends React.Component {
                         </select>
                     </div>
                 </div>}
-                <div className="col-lg-3 col-md-4 col-sm-12 mb-2">
+                <div className="col-12 mb-2">
                     <div className="input-group">
                         <span className="input-group-text">Transaction Type</span>
                         <select name="transactionTypeFilter" value={filters.transactionTypeFilter} className="form-control" onChange={this.handleFilterChange}>
@@ -74,7 +74,7 @@ class FiltersView extends React.Component {
                         </select>
                     </div>
                 </div>
-                <div className="col-lg-3 col-md-4 col-sm-12 mb-2">
+                <div className="col-12 mb-2">
                     <div className="input-group">
                         <span className="input-group-text">Tag</span>
                         <select name="tagFilter" value={filters.tagFilter} className="form-control" onChange={this.handleFilterChange}>
@@ -84,17 +84,17 @@ class FiltersView extends React.Component {
                         </select>
                     </div>
                 </div>
-                <div className="col-lg-3 col-md-4 col-sm-12 mb-2">
+                <div className="col-12 mb-2">
                     <div className="input-group">
                         <span className="input-group-text">Search</span>
                         <input type="search" name="searchFilter" value={filters.searchFilter} className="form-control" onChange={this.handleFilterChange} />
                     </div>
                 </div>
             </div>
-            <button className="btn btn-sm btn-dark me-2" onClick={() => this.toggleFiltersView()}>
+            <button className="btn btn-dark me-2" onClick={() => this.toggleFiltersView()}>
                 <i className="bi bi-x-lg"></i>
             </button>
-            <button className="btn btn-sm btn-dark me-2" onClick={this.props.resetFilters}>
+            <button className="btn btn-dark me-2" onClick={this.props.resetFilters}>
                 <i className="bi bi-trash-fill"></i>
             </button>
         </div>;
