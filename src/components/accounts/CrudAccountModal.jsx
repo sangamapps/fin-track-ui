@@ -72,7 +72,7 @@ class CrudAccountModal extends React.Component {
                     <input type="text" className="form-control" name="name" value={name} onChange={this.handleChange} required />
                 </div>
                 <div className="mb-2">
-                    <label className="form-label">Amount</label>
+                    <label className="form-label">Opening Balance</label>
                     <input type="number" className="form-control" name="amount" value={amount} onChange={this.handleChange} />
                 </div>
                 <div className="mb-2">

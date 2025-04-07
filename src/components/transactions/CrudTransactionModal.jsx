@@ -14,7 +14,7 @@ function getDerivedStateFromProps(props) {
         accountId: props.transaction?.accountId || "",
         amount: props.transaction?.amount || 0,
         description: props.transaction?.description || "",
-        comments: props.account?.comments || "",
+        comments: props.transaction?.comments || "",
     };
 }
 

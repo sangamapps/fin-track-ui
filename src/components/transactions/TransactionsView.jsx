@@ -107,7 +107,7 @@ class TransactionsView extends React.Component {
     getTransactionAmount(transaction) {
         return <div className="mb-1">
             <strong>{TRANSACTION_COLUMNS_LABEL_MAP[TRANSACTION_COLUMNS_MAP.AMOUNT]}: </strong>
-            <span className={"badge bg-" + this.getTransactionTypeBg(transaction.transactionType)}>₹{transaction[TRANSACTION_COLUMNS_MAP.AMOUNT]}</span>
+            <span className={"badge bg-" + this.getTransactionTypeBg(transaction.transactionType)}>₹{transaction[TRANSACTION_COLUMNS_MAP.AMOUNT].toLocaleString("en-IN")}</span>
         </div>
     }
 
@@ -157,7 +157,7 @@ class TransactionsView extends React.Component {
     getTransactions(filteredTransactions) {
         return this.props.transactions.length > 0 && <div>
             <StatsView filteredTransactions={filteredTransactions} />
-            <SummaryTable transactions={filteredTransactions} />
+            <SummaryTable transactions={filteredTransactions} accounts={this.props.accounts} />
             {this.getTransactionsCountLabel(filteredTransactions)}
             {this.getDraftActions(filteredTransactions)}
             <div className="row mt-2">{filteredTransactions.slice().reverse().map(this.getTransaction)}</div>
@@ -200,4 +200,4 @@ class TransactionsView extends React.Component {
     }
 }
 
-export default connect(state => _.pick(state.user, ["accountsMap", "rulesMap"]))(TransactionsView);
+export default connect(state => _.pick(state.user, ["accountsMap", "accounts", "rulesMap"]))(TransactionsView);

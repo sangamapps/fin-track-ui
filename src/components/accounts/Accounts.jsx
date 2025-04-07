@@ -24,6 +24,16 @@ class Accounts extends React.Component {
         });
     };
 
+    getFormattedAmount(amount) {
+        return amount.toLocaleString("en-IN", {
+            minimumFractionDigits: 2,
+        });
+    }
+
+    getParsedAmount(amount) {
+        return this.getFormattedAmount(parseFloat(amount));
+    }
+
     getAccountsContainer() {
         const { accounts, loadingAccounts } = this.props;
 
@@ -39,29 +49,53 @@ class Accounts extends React.Component {
 
         const groupedAccounts = _.groupBy(accounts, "accountGroup");
 
-        return _.keys(groupedAccounts).map((group) => (
-            <div key={group} className="mt-3">
-                <h3>{ACCOUNT_GROUP[group]}</h3>
-                <ul className="list-group">
-                    {groupedAccounts[group].map((acc) => (
-                        <li
-                            key={acc._id}
-                            className="list-group-item d-flex justify-content-between align-items-center"
-                        >
-                            <div>
-                                <strong>{acc.name}</strong>
-                                <p className="mb-0 text-muted">{acc.description}</p>
-                            </div>
-                            <div>
-                                <span className="badge bg-success me-2">₹{acc.amount}</span>
-                                <button className="btn btn-sm btn-warning me-2" onClick={() => this.toggleModal(acc)}>Edit</button>
-                                <button className="btn btn-sm btn-danger" onClick={() => this.handleDelete(acc._id)}>Delete</button>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        ));
+        return _.keys(groupedAccounts).map((group) => {
+            const closingBalance = groupedAccounts[group].reduce((sum, acc) => sum + parseFloat(acc.currentBalance || 0), 0);
+
+            return (
+                <div key={group} className="mt-3">
+                    <div className="d-flex justify-content-between align-items-center">
+                        <h3 className="mb-0">{ACCOUNT_GROUP[group]}</h3>
+                        <span className="badge bg-primary">
+                            Closing Balance: ₹{this.getFormattedAmount(closingBalance)}
+                        </span>
+                    </div>
+                    <ul className="list-group mt-2">
+                        {groupedAccounts[group].map((acc) => (
+                            <li key={acc._id} className="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>{acc.name}</strong>
+                                    <p className="mb-0 text-muted">{acc.description}</p>
+                                    <div className="text-muted d-block mt-1 fs-6">
+                                        <div>
+                                            Opening Balance:
+                                            <span>₹{this.getParsedAmount(acc.amount)}</span>
+                                        </div>
+                                        <div>
+                                            Total Credit:{" "}
+                                            <span className="text-success">₹{this.getParsedAmount(acc.totalCredit)}</span>
+                                        </div>
+                                        <div>
+                                            Total Debit:{" "}
+                                            <span className="text-danger">₹{this.getParsedAmount(acc.totalDebit)}</span>
+                                        </div>
+                                        <div>
+                                            Closing Balance:{" "}
+                                            <strong>₹{this.getParsedAmount(acc.currentBalance)}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button className="btn btn-sm btn-warning me-2" onClick={() => this.toggleModal(acc)}>Edit</button>
+                                    <button className="btn btn-sm btn-danger" onClick={() => this.handleDelete(acc._id)}>Delete</button>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            );
+        });
+
     }
 
     getCrudAccountModal() {
