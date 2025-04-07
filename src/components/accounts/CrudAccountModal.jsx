@@ -14,7 +14,6 @@ function getDerivedStateFromProps(props) {
         name: props.account?.name || "",
         amount: props.account?.amount || "",
         description: props.account?.description || "",
-        comments: props.account?.comments || "",
     };
 }
 
@@ -56,7 +55,7 @@ class CrudAccountModal extends React.Component {
     }
 
     getModalBody() {
-        const { accountGroup, name, amount, description, comments } = this.state;
+        const { accountGroup, name, amount, description } = this.state;
         return (
             <form ref={this.formRef} onSubmit={this.handleSubmit}>
                 <div className="mb-2">
@@ -79,10 +78,6 @@ class CrudAccountModal extends React.Component {
                 <div className="mb-2">
                     <label className="form-label">Description</label>
                     <textarea className="form-control" name="description" value={description} onChange={this.handleChange} />
-                </div>
-                <div className="mb-2">
-                    <label className="form-label">Comments</label>
-                    <textarea className="form-control" name="comments" value={comments} onChange={this.handleChange} />
                 </div>
             </form>
         );

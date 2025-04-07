@@ -14,6 +14,7 @@ function getDerivedStateFromProps(props) {
         accountId: props.transaction?.accountId || "",
         amount: props.transaction?.amount || 0,
         description: props.transaction?.description || "",
+        comments: props.account?.comments || "",
     };
 }
 
@@ -58,7 +59,7 @@ class CrudTransactionModal extends React.Component {
     }
 
     getModalBody() {
-        const { date, description, accountId, transactionType, amount } = this.state;
+        const { date, description, accountId, transactionType, amount, comments } = this.state;
         const { accountsMap } = this.props;
         return (
             <form ref={this.formRef} onSubmit={this.handleSubmit}>
@@ -90,6 +91,10 @@ class CrudTransactionModal extends React.Component {
                 <div className="mb-2">
                     <label className="form-label">Description</label>
                     <input type="text" className="form-control" name="description" value={description} onChange={this.handleChange} />
+                </div>
+                <div className="mb-2">
+                    <label className="form-label">Comments</label>
+                    <textarea className="form-control" name="comments" value={comments} onChange={this.handleChange} />
                 </div>
             </form>
         );
