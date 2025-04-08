@@ -1,47 +1,10 @@
 "use strict";
 
 import React from "react";
-import LazyLoad from "@components/lazy-load/LazyLoad.jsx";
 import "chart.js/auto";
 import { setStatsGroupByPeriod } from "@store";
+import { charts } from "@utils/statsChartUtil"
 import { connect } from "react-redux";
-
-const charts = [
-    {
-        component: () => import("./BalanceTrends.jsx"),
-        className: "col-sm-12 col-md-6 col-lg-4 mb-3",
-    },
-    {
-        component: () => import("./TransactionTypeTrends.jsx"),
-        className: "col-sm-12 col-md-6 col-lg-4 mb-3",
-        props: { transactionType: "DEBIT" },
-    },
-    {
-        component: () => import("./TransactionTypeTrends.jsx"),
-        className: "col-sm-12 col-md-6 col-lg-4 mb-3",
-        props: { transactionType: "CREDIT" },
-    },
-    {
-        component: () => import("./TransactionCountTrends.jsx"),
-        className: "col-sm-12 col-md-6 col-lg-4 mb-3",
-    },
-    {
-        component: () => import("./TransactionAmountCount.jsx"),
-        className: "col-sm-12 col-md-6 col-lg-4 mb-3",
-    },
-    {
-        component: () => import("./TransactionAmountSum.jsx"),
-        className: "col-sm-12 col-md-6 col-lg-4 mb-3",
-    },
-    {
-        component: () => import("./TagAmountCount.jsx"),
-        className: "col-sm-12 col-md-6 col-lg-4 mb-3",
-    },
-    {
-        component: () => import("./TagAmountSum.jsx"),
-        className: "col-sm-12 col-md-6 col-lg-4 mb-3",
-    },
-];
 
 class StatsView extends React.Component {
 
@@ -53,9 +16,41 @@ class StatsView extends React.Component {
         this.props.dispatch(setStatsGroupByPeriod(e.target.value));
     }
 
+    getApplicableTransactions(transactions, filters) {
+        return _.filter(transactions, (transaction) => {
+            if (_.isEmpty(filters)) return true;
+            return _.every(filters, (value, key) => {
+                return _.get(transaction, key) == value;
+            });
+        });
+    }
+
+    getChartCard = (chart, index) => {
+        const { statsGroupByPeriod, filteredTransactions, accountsMap, rules } = this.props;
+        const applicableTransactions = this.getApplicableTransactions(filteredTransactions, chart.filters);
+        if (applicableTransactions.length == 0) return null;
+        const { labels, data } = chart.getData(applicableTransactions, accountsMap, statsGroupByPeriod, rules);
+        const datasets = chart.getDatasets(data);
+        return <div key={index} className={chart.className}>
+            <div className="card shadow-sm p-3">
+                <h5 className="card-title">{chart.title}</h5>
+                <div className="chart-container">
+                    <chart.Chart data={{ labels, datasets }} />
+                </div>
+            </div>
+        </div>;
+    }
+
+    getChartCards() {
+        if (!this.state.showStatsView) return [];
+        return charts.map(this.getChartCard).filter(c => c != null);
+    }
+
     render() {
         const { statsGroupByPeriod, filteredTransactions } = this.props;
-        if(filteredTransactions.length == 0) return <></>;
+        if (filteredTransactions.length == 0) return <div />;
+        const chartViews = this.getChartCards();
+        if (chartViews.length == 0) return <div />;
         return (
             <div className="">
                 <div className="mb-2 d-flex align-items-center">
@@ -71,17 +66,10 @@ class StatsView extends React.Component {
                         {this.state.showStatsView ? <i className="bi bi-eye-slash-fill"></i> : <i className="bi bi-eye-fill"></i>}
                     </button>
                 </div>
-
-                {this.state.showStatsView && <div className="row">
-                    {charts.map((chart, index) => (
-                        <div key={index} className={chart.className}>
-                            <LazyLoad component={chart.component} timeFilter={statsGroupByPeriod} filteredTransactions={filteredTransactions} {...chart.props} />
-                        </div>
-                    ))}
-                </div>}
+                <div className="row">{chartViews}</div>
             </div>
         );
     }
 };
 
-export default connect(state => _.pick(state.user, ["statsGroupByPeriod"]))(StatsView);
+export default connect(state => _.pick(state.user, ["statsGroupByPeriod", "accountsMap", "rules"]))(StatsView);
