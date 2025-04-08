@@ -1,8 +1,9 @@
 "use strict";
 
 import React from "react";
-import { TRANSACTION_COLUMNS_MAP, TRANSACTION_TYPES, ACCOUNT_GROUP } from "@config";
+import { TRANSACTION_TYPES } from "@config";
 import amountUtil from "@utils/amountUtil.js";
+import labelUtil from "@utils/labelUtil";
 
 export default class SummaryTable extends React.Component {
 
@@ -11,67 +12,67 @@ export default class SummaryTable extends React.Component {
         if (_.isEmpty(transactions) || _.isEmpty(accounts)) return <></>;
 
         const transactionAccountIds = _.uniq(transactions.map(tx => tx.accountId));
-        const filteredAccounts = accounts.filter(acc => transactionAccountIds.includes(acc._id || acc.id) && !acc.accountGroup.includes("others"));
+        const filteredAccounts = accounts.filter(acc => transactionAccountIds.includes(acc._id || acc.id) && !acc.type.includes("others"));
         
         const accountSummaries = filteredAccounts.map((account) => {
             const accountId = account._id || account.id;
-            const opening = parseFloat(account.amount) || 0;
+            const openingBalance = account.openingBalance || 0;
 
             const filteredTransactions = transactions.filter(tx => tx.accountId === accountId);
 
-            const grouped = _.groupBy(filteredTransactions, "transactionType");
-            const debits = _.sumBy(grouped[TRANSACTION_TYPES.DEBIT], tx => tx[TRANSACTION_COLUMNS_MAP.AMOUNT]);
-            const credits = _.sumBy(grouped[TRANSACTION_TYPES.CREDIT], tx => tx[TRANSACTION_COLUMNS_MAP.AMOUNT]);
+            const grouped = _.groupBy(filteredTransactions, "type");
+            const totalDebit = _.sumBy(grouped[TRANSACTION_TYPES.DEBIT], tx => tx.amount);
+            const totalCredit = _.sumBy(grouped[TRANSACTION_TYPES.CREDIT], tx => tx.amount);
 
-            const closing = opening + credits - debits;
+            const closingBalance = openingBalance + totalCredit - totalDebit;
 
             return {
                 name: account.name,
-                accountGroup: ACCOUNT_GROUP[account.accountGroup],
-                opening,
-                debits,
-                credits,
-                closing
+                type: account.type,
+                openingBalance,
+                totalDebit,
+                totalCredit,
+                closingBalance
             };
         });
 
         const cumulative = {
-            opening: _.sumBy(accountSummaries, "opening"),
-            debits: _.sumBy(accountSummaries, "debits"),
-            credits: _.sumBy(accountSummaries, "credits"),
+            openingBalance: _.sumBy(accountSummaries, "openingBalance"),
+            totalDebit: _.sumBy(accountSummaries, "totalDebit"),
+            totalCredit: _.sumBy(accountSummaries, "totalCredit"),
         };
-        cumulative.closing = cumulative.opening + cumulative.credits - cumulative.debits;
+        cumulative.closingBalance = cumulative.openingBalance + cumulative.totalCredit - cumulative.totalDebit;
 
         return (
             <div className="mt-4">
-                <h4 className="mb-3 text-primary">Summary</h4>
+                <h4 className="mb-3">Summary</h4>
                 <div className="table-responsive">
                     <table className="table table-bordered table-striped text-center shadow-sm">
                         <thead className="table-light">
                             <tr>
                                 <th>Account</th>
                                 <th>Opening Balance (₹)</th>
-                                <th>Total Debits (₹)</th>
-                                <th>Total Credits (₹)</th>
+                                <th>Total Debit (₹)</th>
+                                <th>Total Credit (₹)</th>
                                 <th>Closing Balance (₹)</th>
                             </tr>
                         </thead>
                         <tbody>
                             {accountSummaries.map((acc, idx) => (
                                 <tr key={idx}>
-                                    <td>{acc.name} ({acc.accountGroup})</td>
-                                    <td className="text-muted">{amountUtil.getFormattedAmount(acc.opening)}</td>
-                                    <td className="text-danger">{amountUtil.getFormattedAmount(acc.debits)}</td>
-                                    <td className="text-success">{amountUtil.getFormattedAmount(acc.credits)}</td>
-                                    <td className="fw-bold">{amountUtil.getFormattedAmount(acc.closing)}</td>
+                                    <td>{labelUtil.getAccountLabel(acc)}</td>
+                                    <td className="text-muted">{amountUtil.getFormattedAmount(acc.openingBalance)}</td>
+                                    <td className="text-danger">{amountUtil.getFormattedAmount(acc.totalDebit)}</td>
+                                    <td className="text-success">{amountUtil.getFormattedAmount(acc.totalCredit)}</td>
+                                    <td className="fw-bold">{amountUtil.getFormattedAmount(acc.closingBalance)}</td>
                                 </tr>
                             ))}
                             <tr className="table-secondary fw-bold">
                                 <td>Total</td>
-                                <td>{amountUtil.getFormattedAmount(cumulative.opening)}</td>
-                                <td>{amountUtil.getFormattedAmount(cumulative.debits)}</td>
-                                <td>{amountUtil.getFormattedAmount(cumulative.credits)}</td>
-                                <td>{amountUtil.getFormattedAmount(cumulative.closing)}</td>
+                                <td>{amountUtil.getFormattedAmount(cumulative.openingBalance)}</td>
+                                <td>{amountUtil.getFormattedAmount(cumulative.totalDebit)}</td>
+                                <td>{amountUtil.getFormattedAmount(cumulative.totalCredit)}</td>
+                                <td>{amountUtil.getFormattedAmount(cumulative.closingBalance)}</td>
                             </tr>
                         </tbody>
                     </table>

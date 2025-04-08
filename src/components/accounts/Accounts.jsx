@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { toast } from 'react-toastify';
 import CrudAccountModal from "./CrudAccountModal.jsx";
 import { deleteAccountRequest } from "@store";
-import { ACCOUNT_GROUP } from "@config";
+import { ACCOUNT_TYPE_LABELS } from "@config";
 import uiUtil from "@utils/uiUtil.js";
 import amountUtil from "@utils/amountUtil.js";
 
@@ -38,15 +38,15 @@ class Accounts extends React.Component {
             </div>;
         }
 
-        const groupedAccounts = _.groupBy(accounts, "accountGroup");
+        const groupedAccounts = _.groupBy(accounts, "type");
 
         return _.keys(groupedAccounts).map((group) => {
-            const closingBalance = groupedAccounts[group].reduce((sum, acc) => sum + parseFloat(acc.currentBalance || 0), 0);
+            const closingBalance = groupedAccounts[group].reduce((sum, acc) => sum + acc.closingBalance, 0);
 
             return (
                 <div key={group} className="mt-3">
                     <div className="d-flex justify-content-between align-items-center">
-                        <h3 className="mb-0">{ACCOUNT_GROUP[group]}</h3>
+                        <h3 className="mb-0">{ACCOUNT_TYPE_LABELS[group]}</h3>
                         <span className="badge bg-primary">
                             Closing Balance: ₹{amountUtil.getFormattedAmount(closingBalance)}
                         </span>
@@ -57,22 +57,22 @@ class Accounts extends React.Component {
                                 <div>
                                     <strong>{acc.name}</strong>
                                     <p className="mb-0 text-muted">{acc.description}</p>
-                                    <div className="text-muted d-block mt-1 fs-6">
+                                    <div className="text-muted mt-1 fs-6">
                                         <div>
                                             Opening Balance:
-                                            <span>₹{amountUtil.getParsedAmount(acc.amount)}</span>
+                                            <span>₹{amountUtil.getFormattedAmount(acc.openingBalance)}</span>
                                         </div>
                                         <div>
                                             Total Credit:{" "}
-                                            <span className="text-success">₹{amountUtil.getParsedAmount(acc.totalCredit)}</span>
+                                            <span className="text-success">₹{amountUtil.getFormattedAmount(acc.totalCredit)}</span>
                                         </div>
                                         <div>
                                             Total Debit:{" "}
-                                            <span className="text-danger">₹{amountUtil.getParsedAmount(acc.totalDebit)}</span>
+                                            <span className="text-danger">₹{amountUtil.getFormattedAmount(acc.totalDebit)}</span>
                                         </div>
                                         <div>
                                             Closing Balance:{" "}
-                                            <strong>₹{amountUtil.getParsedAmount(acc.currentBalance)}</strong>
+                                            <strong>₹{amountUtil.getFormattedAmount(acc.closingBalance)}</strong>
                                         </div>
                                     </div>
                                 </div>

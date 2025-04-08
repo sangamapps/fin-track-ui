@@ -5,14 +5,14 @@ import { connect } from "react-redux";
 import { toast } from 'react-toastify';
 import Modal from "@modal/Modal.jsx";
 import { upsertAccountRequest } from "@store";
-import { ACCOUNT_GROUP } from "@config";
+import { ACCOUNT_TYPE_LABELS } from "@config";
 
 function getDerivedStateFromProps(props) {
     return {
         _id: props.account?._id || "",
-        accountGroup: props.account?.accountGroup || "",
+        type: props.account?.type || "",
         name: props.account?.name || "",
-        amount: props.account?.amount || "",
+        openingBalance: props.account?.openingBalance || 0,
         description: props.account?.description || "",
     };
 }
@@ -37,6 +37,7 @@ class CrudAccountModal extends React.Component {
     handleSubmit = (e) => {
         e.preventDefault();
 
+        this.state.openingBalance = parseFloat(this.state.openingBalance);
         this.props.dispatch(upsertAccountRequest(this.state)).then(data => {
             toast.info("Account saved ✅");
             const onSave = this.props.onSave || this.props.onClose || (() => { });
@@ -55,15 +56,15 @@ class CrudAccountModal extends React.Component {
     }
 
     getModalBody() {
-        const { accountGroup, name, amount, description } = this.state;
+        const { type, name, openingBalance, description } = this.state;
         return (
             <form ref={this.formRef} onSubmit={this.handleSubmit}>
                 <div className="mb-2">
-                    <label className="form-label">Account Group</label>
-                    <select className="form-control" name="accountGroup" value={accountGroup} onChange={this.handleChange} required>
+                    <label className="form-label">Account Type</label>
+                    <select className="form-control" name="type" value={type} onChange={this.handleChange} required>
                         <option></option>
-                        {_.keys(ACCOUNT_GROUP).map((key, index) => (
-                            <option key={index} value={key}>{ACCOUNT_GROUP[key]}</option>
+                        {_.keys(ACCOUNT_TYPE_LABELS).map((key, index) => (
+                            <option key={index} value={key}>{ACCOUNT_TYPE_LABELS[key]}</option>
                         ))}
                     </select>
                 </div>
@@ -73,7 +74,7 @@ class CrudAccountModal extends React.Component {
                 </div>
                 <div className="mb-2">
                     <label className="form-label">Opening Balance</label>
-                    <input type="number" className="form-control" name="amount" value={amount} onChange={this.handleChange} />
+                    <input type="number" className="form-control" name="openingBalance" value={openingBalance} onChange={this.handleChange} />
                 </div>
                 <div className="mb-2">
                     <label className="form-label">Description</label>

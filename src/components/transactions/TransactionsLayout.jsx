@@ -3,7 +3,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import transactionService from "@services/transactionService";
 import FiltersView from "@components/transactions/FiltersView.jsx";
 import TransactionsView from "@components/transactions/TransactionsView.jsx";
@@ -32,7 +32,7 @@ class TransactionsLayout extends React.Component {
             endDateFilter: this.state.endDateFilter,
             minAmountFilter: this.state.minAmountFilter,
             maxAmountFilter: this.state.maxAmountFilter,
-            accountGroupFilter: this.state.accountGroupFilter,
+            accountTypeFilter: this.state.accountTypeFilter,
             accountIdFilter: this.state.accountIdFilter,
             transactionTypeFilter: this.state.transactionTypeFilter,
             tagFilter: this.state.tagFilter,
@@ -44,7 +44,7 @@ class TransactionsLayout extends React.Component {
         return {
             minAmountFilter: "",
             maxAmountFilter: "",
-            accountGroupFilter: "",
+            accountTypeFilter: "",
             accountIdFilter: "",
             transactionTypeFilter: "",
             tagFilter: "",
@@ -126,7 +126,6 @@ class TransactionsLayout extends React.Component {
     }
 
     getLayoutBody() {
-        const { LayoutBody } = this.props;
         const filteredTransactions = this.getFilteredTransactions();
         return <TransactionsView isDraft={this.props.isDraft}
             transactions={this.state.transactions} filteredTransactions={filteredTransactions}

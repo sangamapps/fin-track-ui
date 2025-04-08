@@ -13,7 +13,7 @@ const BalanceTrends = ({ filteredTransactions, timeFilter }) => {
         if (!trendData[date]) {
             trendData[date] = cumulativeBalance;
         }
-        if (txn.transactionType === "CREDIT") {
+        if (txn.type === "CREDIT") {
             cumulativeBalance += txn.amount;
         } else {
             cumulativeBalance += -txn.amount;

@@ -9,7 +9,7 @@ const routes = [
         path: '/',
         component: () => import("./TransactionsLayout.jsx"),
         props: {
-            isDraft: false,
+            isDraft: 0,
             startDateFilter: moment().startOf("year").format("YYYY-MM-DD"),
             endDateFilter: moment().format("YYYY-MM-DD"),
             sortByDate: 1,
@@ -19,7 +19,7 @@ const routes = [
         path: '/transactions/drafts',
         component: () => import("./TransactionsLayout.jsx"),
         props: {
-            isDraft: true,
+            isDraft: 1,
             sortByDate: 1,
         }
     },

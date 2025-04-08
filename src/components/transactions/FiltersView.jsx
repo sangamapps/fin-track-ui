@@ -2,7 +2,8 @@
 
 import React from "react";
 import { connect } from "react-redux";
-import { ACCOUNT_GROUP, TRANSACTION_TYPES } from "@config";
+import { ACCOUNT_TYPE_LABELS, TRANSACTION_TYPES } from "@config";
+import labelUtil from "@utils/labelUtil";
 
 class FiltersView extends React.Component {
 
@@ -48,10 +49,10 @@ class FiltersView extends React.Component {
                 </div>
                 {accountsMap && <div className="col-12 mb-2">
                     <div className="input-group">
-                        <span className="input-group-text">Account Group</span>
-                        <select name="accountGroupFilter" value={filters.accountGroupFilter} className="form-control" onChange={this.handleFilterChange}>
+                        <span className="input-group-text">Account Type</span>
+                        <select name="accountTypeFilter" value={filters.accountTypeFilter} className="form-control" onChange={this.handleFilterChange}>
                             <option value="">All</option>
-                            {_.keys(_.groupBy(this.props.accountsMap, "accountGroup")).map((accountGroup, index) => <option key={index} value={accountGroup}>{ACCOUNT_GROUP[accountGroup]}</option>)}
+                            {_.keys(_.groupBy(this.props.accountsMap, "type")).map((accountType, index) => <option key={index} value={accountType}>{ACCOUNT_TYPE_LABELS[accountType]}</option>)}
                         </select>
                     </div>
                 </div>}
@@ -60,7 +61,7 @@ class FiltersView extends React.Component {
                         <span className="input-group-text">Account</span>
                         <select name="accountIdFilter" value={filters.accountIdFilter} className="form-control" onChange={this.handleFilterChange}>
                             <option value="">All</option>
-                            {_.values(this.props.accountsMap).map((account, index) => <option key={index} value={account._id}>{account.name} ({ACCOUNT_GROUP[account.accountGroup]})</option>)}
+                            {_.values(this.props.accountsMap).map((account, index) => <option key={index} value={account._id}>{labelUtil.getAccountLabel(account)}</option>)}
                         </select>
                     </div>
                 </div>}

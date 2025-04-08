@@ -5,11 +5,12 @@ import { connect } from "react-redux";
 import { toast } from "react-toastify";
 import transactionService from "@services/transactionService";
 import SummaryTable from "./SummaryTable.jsx";
-import { ACCOUNT_GROUP, TRANSACTION_COLUMNS_MAP, TRANSACTION_COLUMNS_LABEL_MAP, TRANSACTION_TYPES } from "@config";
+import { TRANSACTION_LABELS, TRANSACTION_TYPES } from "@config";
 import CrudRuleModal from "@components/rules/CrudRuleModal.jsx";
 import CrudTransactionModal from "./CrudTransactionModal.jsx";
 import StatsView from "./stats/StatsView.jsx";
 import amountUtil from "@utils/amountUtil.js";
+import labelUtil from "@utils/labelUtil.js";
 
 const momentDate = (date) => {
     return moment(date, "YYYY-MM-DD");
@@ -76,7 +77,7 @@ class TransactionsView extends React.Component {
         const usedRules = _.keys(_.pickBy(transaction.appliedRules, v => v == 1));
         return <div className="d-flex ">
             <div className="d-flex flex-wrap">
-                {this.getDefaultTag(transaction.transactionType, this.getTransactionTypeBg(transaction.transactionType))}
+                {this.getDefaultTag(transaction.type, this.getTransactionTypeBg(transaction.type))}
                 {usedRules.length == 0 && this.getDefaultTag("Others", "dark")}
                 {usedRules.map((rule_id) => this.getTag(transaction, rule_id))}
             </div>
@@ -95,34 +96,34 @@ class TransactionsView extends React.Component {
 
     getTransactionDate(transaction) {
         return <div className="mb-1">
-            <strong>{TRANSACTION_COLUMNS_LABEL_MAP[TRANSACTION_COLUMNS_MAP.DATE]}:</strong> {momentDate(transaction[TRANSACTION_COLUMNS_MAP.DATE]).format("MMMM D, YYYY (dddd)")}
+            <strong>{TRANSACTION_LABELS.DATE}:</strong> {momentDate(transaction.date).format("MMMM D, YYYY (dddd)")}
         </div>;
     }
 
     getTransactionAccount(transaction) {
-        return transaction.accountGroup && <div className="mb-1">
-            <strong>{TRANSACTION_COLUMNS_LABEL_MAP[TRANSACTION_COLUMNS_MAP.ACCOUNT_ID]}:</strong> {transaction.accountName} ({transaction.accountGroup})
+        return transaction.account && <div className="mb-1">
+            <strong>{TRANSACTION_LABELS.ACCOUNT_ID}:</strong> {labelUtil.getAccountLabel(transaction.account)}
         </div>;
     }
 
     getTransactionAmount(transaction) {
         return <div className="mb-1">
-            <strong>{TRANSACTION_COLUMNS_LABEL_MAP[TRANSACTION_COLUMNS_MAP.AMOUNT]}: </strong>
-            <span className={"badge bg-" + this.getTransactionTypeBg(transaction.transactionType)}>₹{amountUtil.getFormattedAmount(transaction[TRANSACTION_COLUMNS_MAP.AMOUNT])}</span>
+            <strong>{TRANSACTION_LABELS.ACCOUNT}: </strong>
+            <span className={"badge bg-" + this.getTransactionTypeBg(transaction.type)}>₹{amountUtil.getFormattedAmount(transaction.amount)}</span>
         </div>
     }
 
     getTransactionDescription(transaction) {
-        const description = transaction[TRANSACTION_COLUMNS_MAP.DESCRIPTION];
+        const description = transaction.description;
         return !_.isEmpty(description) && <div className="mb-1">
-            <strong>{TRANSACTION_COLUMNS_LABEL_MAP[TRANSACTION_COLUMNS_MAP.DESCRIPTION]}:</strong> {description}
+            <strong>{TRANSACTION_LABELS.DESCRIPTION}:</strong> {description}
         </div>;
     }
 
     getTransactionComments(transaction) {
-        const comments = transaction[TRANSACTION_COLUMNS_MAP.COMMENTS];
+        const comments = transaction.comments;
         return !_.isEmpty(comments) && <div className="mb-1">
-            <strong>{TRANSACTION_COLUMNS_LABEL_MAP[TRANSACTION_COLUMNS_MAP.COMMENTS]}:</strong> {comments}
+            <strong>{TRANSACTION_LABELS.COMMENTS}:</strong> {comments}
         </div>;
     }
 

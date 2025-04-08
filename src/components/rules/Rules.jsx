@@ -42,9 +42,8 @@ class Rules extends React.Component {
                     <div key={index} className="col-md-4 mb-3">
                         <div className="card shadow-sm">
                             <div className="card-body">
-                                <h5 className="card-title">{rule.name}</h5>
-                                <p className="card-text"><strong>Contains:</strong> {rule.contains}</p>
-                                <span className="badge bg-primary">{rule.tag}</span>
+                                <strong>{rule.tag}</strong>
+                                <div className="mt-1 text-muted"><small>Keywords: {rule.keywords}</small></div>
                                 <div className="mt-3 d-flex justify-content-between">
                                     <button className="btn btn-warning btn-sm" onClick={() => this.toggleModal(rule)}>
                                         <i className="bi bi-pencil"></i> Edit

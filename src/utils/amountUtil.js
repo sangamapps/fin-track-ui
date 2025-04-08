@@ -4,9 +4,6 @@ const utils = {
             minimumFractionDigits: 2,
         });
     },
-    getParsedAmount: (amount) => {
-        return utils.getFormattedAmount(parseFloat(amount));
-    },
 }
 
 export default utils;

@@ -4,10 +4,11 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from 'react-toastify';
-import { EXTRACTORS_MAP } from "@config";
+import { EXTRACTOR_TYPE_LABELS } from "@config";
 import CrudAccountModal from "@components/accounts/CrudAccountModal.jsx";
 import transactionService from "@services/transactionService";
 import uiUtil from "@utils/uiUtil";
+import labelUtil from "@utils/labelUtil";
 
 class Upload extends React.Component {
     state = {
@@ -55,7 +56,7 @@ class Upload extends React.Component {
                     <select className="form-select me-2" name="accountId" value={accountId} onChange={this.handleChange} required>
                         <option value=""></option>
                         {this.props.accounts.map((account, index) => (
-                            <option key={index} value={account._id}>{account.name}</option>
+                            <option key={index} value={account._id}>{labelUtil.getAccountLabel(account)}</option>
                         ))}
                     </select>
                     <button className="btn btn-dark" onClick={() => this.toggleAccountModal()}>+</button>
@@ -65,8 +66,8 @@ class Upload extends React.Component {
                 <label className="form-label">Select Extractor</label>
                 <select className="form-select" name="extractor" value={extractor} onChange={this.handleChange} required>
                     <option value=""></option>
-                    {_.keys(EXTRACTORS_MAP).map((extractor, index) => (
-                        <option key={index} value={extractor}>{EXTRACTORS_MAP[extractor]}</option>
+                    {_.keys(EXTRACTOR_TYPE_LABELS).map((extractor, index) => (
+                        <option key={index} value={extractor}>{EXTRACTOR_TYPE_LABELS[extractor]}</option>
                     ))}
                 </select>
             </div>

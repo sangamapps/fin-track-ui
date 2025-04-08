@@ -1,5 +1,4 @@
 import ruleUtil from "./ruleUtil";
-import { ACCOUNT_GROUP } from "@config";
 
 export default {
     applyFilters: (transactions, filters, accountsMap, rules) => {
@@ -7,16 +6,19 @@ export default {
             if (!_.isEmpty(filters.minAmountFilter) && transaction.amount < filters.minAmountFilter) return false;
             if (!_.isEmpty(filters.maxAmountFilter) && transaction.amount > filters.maxAmountFilter) return false;
             const account = accountsMap && accountsMap[transaction.accountId] || {};
-            transaction.accountGroup = ACCOUNT_GROUP[account.accountGroup] || "";
-            transaction.accountName = account.name || "";
-            if (!_.isEmpty(filters.accountGroupFilter) && account.accountGroup != filters.accountGroupFilter) return false;
+            transaction.account = account;
+            if (!_.isEmpty(filters.accountTypeFilter) && account.type != filters.accountTypeFilter) return false;
             if (!_.isEmpty(filters.accountIdFilter) && transaction.accountId != filters.accountIdFilter) return false;
-            if (!_.isEmpty(filters.transactionTypeFilter) && transaction.transactionType != filters.transactionTypeFilter) return false;
+            if (!_.isEmpty(filters.transactionTypeFilter) && transaction.type != filters.transactionTypeFilter) return false;
             ruleUtil.applyRules(transaction, rules);
             if (!_.isEmpty(filters.tagFilter)) {
-                if (filters.tagFilter == "__NONE__" && transaction.tags.length == 0) return true;
-                if (filters.tagFilter in transaction.appliedRules && transaction.appliedRules[filters.tagFilter] == 1) return true;
-                return false;
+                if (filters.tagFilter == "__NONE__") {
+                    if (transaction.tags.length > 0) {
+                        return false;
+                    }
+                } else if (!transaction.appliedRules[filters.tagFilter]) {
+                    return false;
+                }
             }
             if (!_.isEmpty(filters.searchFilter) && !_.includes(_.toLower(transaction.description), _.toLower(filters.searchFilter))) return false;
             return true;

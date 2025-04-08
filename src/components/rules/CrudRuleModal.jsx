@@ -9,9 +9,9 @@ import { upsertRuleRequest } from "@store";
 function getDerivedStateFromProps(props) {
     return {
         _id: props.rule?._id || "",
-        name: props.rule?.name || "",
-        contains: props.rule?.contains || "",
         tag: props.rule?.tag || "",
+        keywords: props.rule?.keywords || "",
+        description: props.rule?.description || "",
     };
 }
 
@@ -54,20 +54,16 @@ class CrudRuleModal extends React.Component {
     }
 
     getModalBody() {
-        const { name, contains, tag } = this.state;
+        const { name, keywords, tag } = this.state;
         return (
             <form ref={this.formRef} onSubmit={this.handleSubmit}>
                 <div className="mb-2">
-                    <label className="form-label">Name</label>
-                    <input type="text" className="form-control" name="name" value={name} onChange={this.handleChange} placeholder="Rule Name" required />
-                </div>
-                <div className="mb-2">
-                    <label className="form-label">Contains</label>
-                    <textarea className="form-control" name="contains" value={contains} onChange={this.handleChange} placeholder="Keywords (eg: Keyword1, Keyword2)" required />
-                </div>
-                <div className="mb-2">
                     <label className="form-label">Tag</label>
                     <input type="text" className="form-control" name="tag" value={tag || name} onChange={this.handleChange} placeholder="Tag" required />
+                </div>
+                <div className="mb-2">
+                    <label className="form-label">Keywords</label>
+                    <textarea className="form-control" name="keywords" value={keywords} onChange={this.handleChange} placeholder="Keywords (eg: Keyword1, Keyword2)" required />
                 </div>
             </form>
         );

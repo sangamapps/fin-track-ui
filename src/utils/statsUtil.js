@@ -8,7 +8,7 @@ export default {
         return "Overall";
     },
     getCummulativeBalance: (transactions, accountsMap) => {
-        return _.sumBy(_.uniq(_.map(transactions, ft => ft.accountId)), a => parseFloat(accountsMap[a].amount));
+        return _.sumBy(_.uniq(_.map(transactions, ft => ft.accountId)), a => accountsMap[a].openingBalance);
     },
     getTransactionAmountRange: () => {
         return [

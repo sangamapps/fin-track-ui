@@ -1,10 +1,10 @@
 import React from "react";
 import { Bar } from "react-chartjs-2";
 import statsUtil from "@utils/statsUtil";
-import { TRANSACTION_TYPES_LABEL_MAP } from "@config";
+import { TRANSACTION_TYPES_LABELS } from "@config";
 
 const TransactionTypeTrends = ({ filteredTransactions, timeFilter, transactionType }) => {
-    const transactionTypeLabel = TRANSACTION_TYPES_LABEL_MAP[transactionType];
+    const transactionTypeLabel = TRANSACTION_TYPES_LABELS[transactionType];
 
     const trendData = {};
     filteredTransactions.forEach(txn => {
@@ -12,7 +12,7 @@ const TransactionTypeTrends = ({ filteredTransactions, timeFilter, transactionTy
         if (!trendData[date]) {
             trendData[date] = 0;
         }
-        if (txn.transactionType === transactionType) {
+        if (txn.type === transactionType) {
             trendData[date] += txn.amount;
         }
     });
