@@ -102,13 +102,13 @@ class TransactionsView extends React.Component {
 
     getTransactionAccount(transaction) {
         return transaction.account && <div className="mb-1">
-            <strong>{TRANSACTION_LABELS.ACCOUNT_ID}:</strong> {labelUtil.getAccountLabel(transaction.account)}
+            <strong>{TRANSACTION_LABELS.ACCOUNT}:</strong> {labelUtil.getAccountLabel(transaction.account)}
         </div>;
     }
 
     getTransactionAmount(transaction) {
         return <div className="mb-1">
-            <strong>{TRANSACTION_LABELS.ACCOUNT}: </strong>
+            <strong>{TRANSACTION_LABELS.AMOUNT}: </strong>
             <span className={"badge bg-" + this.getTransactionTypeBg(transaction.type)}>₹{amountUtil.getFormattedAmount(transaction.amount)}</span>
         </div>
     }
@@ -150,7 +150,7 @@ class TransactionsView extends React.Component {
 
     getDraftActions(filteredTransactions) {
         // const isFiltered = filteredTransactions.length < this.props.transactions.length;
-        return this.props.isDraft && this.props.transactions.length > 0 && <div className="mt-2 d-flex justify-content-center">
+        return this.props.isDraft == 0 && this.props.transactions.length > 0 && <div className="mt-2 d-flex justify-content-center">
             <button className="btn btn-primary me-2" onClick={this.saveDrafts}>Save All</button>
             <button className="btn btn-danger" onClick={this.deleteDrafts}>Delete All</button>
         </div>;
