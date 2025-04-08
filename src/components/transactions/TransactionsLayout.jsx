@@ -32,6 +32,7 @@ class TransactionsLayout extends React.Component {
             endDateFilter: this.state.endDateFilter,
             minAmountFilter: this.state.minAmountFilter,
             maxAmountFilter: this.state.maxAmountFilter,
+            excludeFromTotalsFilter: this.state.excludeFromTotalsFilter,
             accountTypeFilter: this.state.accountTypeFilter,
             accountIdFilter: this.state.accountIdFilter,
             transactionTypeFilter: this.state.transactionTypeFilter,
@@ -48,6 +49,7 @@ class TransactionsLayout extends React.Component {
             accountIdFilter: "",
             transactionTypeFilter: "",
             tagFilter: "",
+            excludeFromTotalsFilter: "0",
             searchFilter: "",
         };
     }

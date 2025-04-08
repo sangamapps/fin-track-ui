@@ -15,6 +15,7 @@ function getDerivedStateFromProps(props) {
         type: props.transaction?.type || TRANSACTION_TYPES.DEBIT,
         accountId: props.transaction?.accountId || "",
         amount: props.transaction?.amount || 0,
+        excludeFromTotals: props.transaction?.excludeFromTotals || 0,
         balance: props.transaction?.balance || 0,
         description: props.transaction?.description || "",
         appliedRules: props.transaction?.appliedRules || {},
@@ -44,6 +45,7 @@ class CrudTransactionModal extends React.Component {
         e.preventDefault();
 
         this.state.amount = parseFloat(this.state.amount);
+        this.state.excludeFromTotals = parseInt(this.state.excludeFromTotals);
         transactionService.upsert(this.state).then(data => {
             toast.info("Transaction saved ✅");
             this.props.onSave(data.transaction);
@@ -61,7 +63,7 @@ class CrudTransactionModal extends React.Component {
     }
 
     getModalBody() {
-        const { date, description, accountId, type, amount, comments } = this.state;
+        const { date, description, accountId, type, amount, excludeFromTotals, comments } = this.state;
         const { accountsMap } = this.props;
         return (
             <form ref={this.formRef} onSubmit={this.handleSubmit}>
@@ -89,6 +91,13 @@ class CrudTransactionModal extends React.Component {
                 <div className="mb-2">
                     <label className="form-label">Amount</label>
                     <input type="number" className="form-control" name="amount" value={amount} onChange={this.handleChange} required />
+                </div>
+                <div className="mb-2">
+                    <label className="form-label">Exclude from Totals</label>
+                    <select className="form-select" name="excludeFromTotals" value={excludeFromTotals} onChange={this.handleChange} required>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
                 </div>
                 <div className="mb-2">
                     <label className="form-label">Description</label>

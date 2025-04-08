@@ -87,6 +87,16 @@ class FiltersView extends React.Component {
                 </div>
                 <div className="col-12 mb-2">
                     <div className="input-group">
+                        <span className="input-group-text">Include in Totals</span>
+                        <select name="excludeFromTotalsFilter" value={filters.excludeFromTotalsFilter} className="form-control" onChange={this.handleFilterChange}>
+                            <option value="">All</option>
+                            <option value="0">Only Included</option>
+                            <option value="1">Only Excluded</option>
+                        </select>
+                    </div>
+                </div>
+                <div className="col-12 mb-2">
+                    <div className="input-group">
                         <span className="input-group-text">Search</span>
                         <input type="search" name="searchFilter" value={filters.searchFilter} className="form-control" onChange={this.handleFilterChange} />
                     </div>

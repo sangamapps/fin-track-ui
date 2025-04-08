@@ -5,6 +5,7 @@ export default {
         return _.filter(transactions, (transaction) => {
             if (!_.isEmpty(filters.minAmountFilter) && transaction.amount < filters.minAmountFilter) return false;
             if (!_.isEmpty(filters.maxAmountFilter) && transaction.amount > filters.maxAmountFilter) return false;
+            if (!_.isEmpty(filters.excludeFromTotalsFilter) && transaction.excludeFromTotals != filters.excludeFromTotalsFilter) return false;
             const account = accountsMap && accountsMap[transaction.accountId] || {};
             transaction.account = account;
             if (!_.isEmpty(filters.accountTypeFilter) && account.type != filters.accountTypeFilter) return false;

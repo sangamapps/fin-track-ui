@@ -78,6 +78,7 @@ class TransactionsView extends React.Component {
         return <div className="d-flex ">
             <div className="d-flex flex-wrap">
                 {this.getDefaultTag(transaction.type, this.getTransactionTypeBg(transaction.type))}
+                {transaction.excludeFromTotals && this.getDefaultTag("Excluded", "secondary")}
                 {usedRules.length == 0 && this.getDefaultTag("Others", "dark")}
                 {usedRules.map((rule_id) => this.getTag(transaction, rule_id))}
             </div>
@@ -150,7 +151,7 @@ class TransactionsView extends React.Component {
 
     getDraftActions(filteredTransactions) {
         // const isFiltered = filteredTransactions.length < this.props.transactions.length;
-        return this.props.isDraft == 0 && this.props.transactions.length > 0 && <div className="mt-2 d-flex justify-content-center">
+        return this.props.isDraft == 1 && this.props.transactions.length > 0 && <div className="mt-2 d-flex justify-content-center">
             <button className="btn btn-primary me-2" onClick={this.saveDrafts}>Save All</button>
             <button className="btn btn-danger" onClick={this.deleteDrafts}>Delete All</button>
         </div>;
