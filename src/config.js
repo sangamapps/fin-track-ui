@@ -5,6 +5,7 @@ export const ACCOUNT_TYPE_LABELS = {
     cash: "Cash",
     credit_card: "Credit Card",
     stocks: "Stocks",
+    nonmonetary: "Non-Monetary",
     others: "Others",
 };
 
