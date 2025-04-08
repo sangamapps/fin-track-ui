@@ -2,7 +2,7 @@
 
 import React from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { fetchAccountsRequest, fetchRulesRequest } from "@store";
 
 class HomeLayout extends React.Component {
@@ -73,5 +73,4 @@ class HomeLayout extends React.Component {
     }
 }
 
-
-export default connect(state => ({ userInfo: state.user.info }))(HomeLayout);
+export default withRouter(connect(state => ({ userInfo: state.user.info }))(HomeLayout));
