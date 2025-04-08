@@ -78,7 +78,7 @@ class TransactionsView extends React.Component {
         return <div className="d-flex ">
             <div className="d-flex flex-wrap">
                 {this.getDefaultTag(transaction.type, this.getTransactionTypeBg(transaction.type))}
-                {transaction.excludeFromTotals && this.getDefaultTag("Excluded", "secondary")}
+                {transaction.excludeFromTotals == 1 && this.getDefaultTag("Excluded", "secondary")}
                 {usedRules.length == 0 && this.getDefaultTag("Others", "dark")}
                 {usedRules.map((rule_id) => this.getTag(transaction, rule_id))}
             </div>
